@@ -1,2 +1,2 @@
-autohotkey_l
-============
+ahk_library
+===========

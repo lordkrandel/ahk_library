@@ -97,10 +97,10 @@ class String {
         return % this.q("""")
     }
     qa(){ // angled
-        return this,q("<", ">")
+        return this.q("<", ">")
     }
     qb(){ // brackets
-        return % this.q("(", ")")
+        return this.q("(", ")")
     }
     qc(){ // curly
         return this.q("{","}")

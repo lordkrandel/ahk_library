@@ -1,3 +1,5 @@
+#include lib\\lib_STRING.ahk
+
 class JSONParser {
 
     // The parser requires a valid JSLint source file as a path

@@ -7,8 +7,6 @@
 
 SendMode Input
 SetTitleMatchMode, 2
-SetWorkingDir %A_ScriptDir%
-Menu, Tray, Icon, images\\Autokube.ico
 
 #include lib\\lib_STRING.ahk
 #include lib\\lib_MATH.ahk

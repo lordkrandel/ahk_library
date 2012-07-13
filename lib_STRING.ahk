@@ -87,19 +87,22 @@ class String {
         return % s
     }
 
-    //    q, qq, braq, curlyq   //
+    //    q, qq, qa, qb, qc   //
     q( left="'", right="" ) {
         if (left && !right)
             right := left
         return % left this right
     }
-    qq(){
+    qq(){ // doublequote
         return % this.q("""")
     }
-    braq(){
+    qa(){ // angled
+        return this,q("<", ">")
+    }
+    qb(){ // brackets
         return % this.q("(", ")")
     }
-    curlyq(){
+    qc(){ // curly
         return this.q("{","}")
     }
 

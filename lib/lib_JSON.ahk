@@ -1,5 +1,6 @@
 class JSONParser {
 
+    // The parser requires a valid JSLint source file as a path
     __New(jsParserPath) {
         try{
             jsParserText := fileopen( jsParserPath, "r").read()

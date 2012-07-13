@@ -4,8 +4,9 @@ lordkrandel/ahk_library
 What
 ------------------------
 
-An Autohotkey_L [http://l.autohotkey.net/] stand-alone library with no external dependancy
+An Autohotkey_L [http://l.autohotkey.net/] stand-alone library. 
 
+The only external requirement is a valid JSON-js [https://github.com/douglascrockford/JSON-js] javascript source file for the lib_JSON
 
 
 Why

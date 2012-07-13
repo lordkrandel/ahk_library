@@ -4,7 +4,7 @@ lordkrandel/ahk_library
 What
 ------------------------
 
-An [AHK_L](http://l.autohotkey.net/] "Autohotkey_L" stand-alone library with no external dependancy
+An Autohotkey_L [http://l.autohotkey.net/] stand-alone library with no external dependancy
 
 
 

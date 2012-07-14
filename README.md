@@ -3,7 +3,6 @@ lordkrandel/ahk_library
 
 
 An Autohotkey_L [http://l.autohotkey.net/] stand-alone library
-
 AHK_L has Object Oriented design, but very few object are included in the core.
 
 Included

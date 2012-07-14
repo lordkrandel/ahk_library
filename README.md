@@ -12,7 +12,8 @@ Included
     lib_STRING.ahk          // string manipulation
     lib_MATH.ahk            // math, algebra, base change
     lib_LOG.ahk             // logging
-    lib_JSON.ahk            // JSON parser ( requires valid json2.js source file from [https://github.com/douglascrockford/JSON-js] )
+    lib_JSON.ahk            // JSON parser ( requires valid json2.js source file )
+                            // [https://github.com/douglascrockford/JSON-js]
     lib_G.ahk               // GUI classes library
     lib_GUI.ahk             // External windows handling (stub)
     lib_EVENTDISPATHCER.ahk // GUI events Object Oriented handling

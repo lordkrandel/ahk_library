@@ -1,14 +1,59 @@
 class Math {
 
     xor(a,b){
-        return ( !!a && !b ) || ( !!b && !a)
+        return !!a && !b || !!b && !a
     }
-    min(x,y){
+    min(x,y = ""){
+        if y is not number
+        {
+            if (y == ""){
+                return Math.minObj(x)
+            }
+        }
         return x > y ? y : x
     }
-    max(x,y){
+    max(x,y = ""){
+        if y is not number
+        {
+            if (y == ""){
+                return Math.maxObj(x)
+            }
+        }
         return x > y ? x : y
     }
+    minObj(x){
+        if (!isObject(x)){
+            return
+        }
+        c := 0
+        d := 0
+        for k, v in x {
+            if ( !d ){
+                c := v
+                d := 1
+            } else {
+                c := Math.min( c, v )
+            }
+        }
+        return c
+    }
+    maxObj(x){
+        if (!isObject(x)){
+            return
+        }
+        c := 0
+        d := 0
+        for k, v in x {
+            if ( !d ) {
+                c := v
+                d := 1
+            } else {
+                c := Math.max( c, v )
+            }
+        }
+        return c
+    }
+
     changeBase(n, b = 10){
         if (b > 16){
             throw "Cannot changeBase with base > 16"

@@ -60,7 +60,7 @@ class EventDispatcher{ // _______________________________________________
             if (label  == "GuiSize"){
                 w.size()
             } else if (label == "GuiClose"){
-                w.hide()
+                w.close()
             } else if (label == "GuiDestroy"){
                 w.close()
             } else if (label == "GuiEscape"){

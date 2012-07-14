@@ -1,5 +1,6 @@
 #EscapeChar \
 #CommentFlag //
+#NoEnv
 
 #InstallKeybdHook
 #SingleInstance force

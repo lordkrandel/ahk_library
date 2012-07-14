@@ -2,10 +2,10 @@
 class String {
 
     // split
-    split(delimiters, omitchars){
+    split(delimiters, omitchars = ""){
         o := {}
         s := this
-        Loop, Parse, s, % delimiters 
+        Loop, Parse, s, % delimiters, % omitchars
         {
             o.insert( a_loopField )
         }

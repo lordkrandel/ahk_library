@@ -18,6 +18,27 @@ This is my personal Object-Oriented library I use for AHK_L development.
 AHK_L has Object Oriented design, but very few object are included in the core.
 
 
+Examples
+------------------------
+
+```#include lib\lib_CORE.ahk
+#include lib\\lib_G.ahk
+
+
+t:= {}
+
+// Math examples ___________________________
+
+o := [ 1, 3, 6, 64, -3 ]
+
+// Min, Max
+t.insert( Math.max(o) ", " Math.min(o) )
+
+// First Valid
+t.insert( Core.firstValid( 0, "", "abba", 5 ) ) ```
+
+
+
 License: Modified 3-clauses BSD
 -------------------------
 

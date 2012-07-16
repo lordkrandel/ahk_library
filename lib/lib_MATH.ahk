@@ -54,7 +54,7 @@ class Math {
         return c
     }
     between(x,y,z){
-        return ( x < y || y < z )
+        return ( x < y && y < z )
     }
 
     changeBase(n, b = 10){

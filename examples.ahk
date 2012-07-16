@@ -1,7 +1,8 @@
 
 #include lib\lib_CORE.ahk
 #include lib\\lib_G.ahk
-
+#include lib\\lib_GUI.ahk
+#include lib\\lib_JSON.ahk
 
 t:= {}
 
@@ -53,9 +54,10 @@ class SampleWindow extends g {
 
     win := { name:     "Example"
            , title:    "sampleWindow"
-           , geom:     { w : 400, h: 240  }
-           , hotkeys:  { "F2"      : "f2slot" }   // Defining callbacks for hotkeys
-           , controls: { "Button1" : "close"  } } // Defining callbacks for control g-labels
+           , geom:     { w : 400, h: 240         }
+           , hotkeys:  { "F2"      : "f2slot"    }   // Defining callbacks for hotkeys
+           , controls: { "Button1" : "close"
+                       , "Button2" : "JSONtest"  } } // Defining callbacks for control g-labels
 
     __new(){
         global t
@@ -64,6 +66,7 @@ class SampleWindow extends g {
         // Print the results of the tests
         Gui, %g%: Add, text,    x10 y10, % "\n\n".join(["Test Results:", "\n".join(t), "Press F2 for window info"])
         Gui, %g%: Add, Button,  x280 y200 w100 h25 gEventDispatcher, Close
+        Gui, %g%: Add, Button,  x180 y200 w100 h25 gEventDispatcher, JSON Test
     }
 
     f2slot(){
@@ -82,10 +85,33 @@ class SampleWindow extends g {
         ExitApp
     }
 
+    JSONtest(){
+
+        // JSON and GUI examples ___________________________
+        id    := this.win.hwnd
+        j     := new JSONParser("json.js")
+        ctrls := Gui.getControls(id)
+        Msgbox, % j.stringify(ctrls)
+
+    }
+
 }
 
 // Create and show the window
-( new SampleWindow() ).show()
+dw := new SampleWindow()
+dw.show()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -71,7 +71,7 @@ class ODBC {
 
             this.connected := 1
         } catch e {
-            return ""
+            throw e
         }
     }
 

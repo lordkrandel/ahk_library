@@ -32,7 +32,7 @@ class JSONParser {
     stringify(val, spacer = " ", precIndent = 0){
         if val is number
         {
-            s := val
+            s := val + 0
         } else if ( isObject(val) ) {
             o := []
             for k,v in val {

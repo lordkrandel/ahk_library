@@ -1,6 +1,5 @@
 #include lib\lib_CORE.ahk
 #include lib\\lib_WINDOW.ahk
-#include lib\\lib_CONTROL.ahk
 #include lib\\lib_EVENTDISPATCHER.ahk
 
 class g {

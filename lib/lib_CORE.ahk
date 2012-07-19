@@ -13,18 +13,30 @@ SetTitleMatchMode, 2
 #include lib\\lib_MATH.ahk
 
 class Core {
+    swap(arr){
+        if (isobject(arr)){
+            o := {}
+            for k,v in arr {
+                o.insert(v,k)
+            }
+            return o
+        }
+    }
     firstValid( a* ){
-        for k,v in a {
-            if (!!v){
-                return v
+        if (isobject(arr)){
+            for k,v in a {
+                if (!!v){
+                    return v
+                }
             }
         }
-        return ""
     }
     find( arr, val ){
-        for k, v in arr {
-            if ( v == val ){
-                return A_index
+        if (isobject(arr)){
+            for k, v in arr {
+                if ( v == val ){
+                    return A_index
+                }
             }
         }
     }
@@ -37,6 +49,15 @@ class Core {
             delta := count - t
             count := 0
             return delta
+        }
+    }
+    keys(arr){
+        if (isobject(arr)){
+            o := {}
+            for k, v in arr {
+                o.insert(k)
+            }
+            return o
         }
     }
 }

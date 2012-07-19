@@ -101,10 +101,31 @@ class SampleWindow extends g {
 dw := new SampleWindow()
 dw.show()
 
+// Loop, lib\\lib_*.ahk
+// {
+//     SplitPath, A_loopfilename,,,, name
+//     flag := 0
+//     Loop, Read, % "lib\\" A_loopfilename, % "docs\\autodoc.txt"
+//     {
+//         if (flag){
+//             if (RegExMatch(A_LoopReadLine, "S)^\s*//" )){
+//                 FileAppend, % "\t" RegexReplace(A_LoopReadLine, "S)^\s*//\\s*", "")
+//             } else {
+//                 flag := 0
+//             }
+//         }
+//         flag :=  RegexMatch(A_LoopReadLine, "iOS)^\\s*class\\s+(.+?)\\s*{", m )
+//         if (flag){
+//             s := "Class %s {\n".fmt( m[1] )
+//             FileAppend, % s
+//         }
+//     }
+//     FileAppend, % "\n", % "docs\\autodoc.txt"
+// }
+// 
 
-
-
-
+i := RegexMatch("{  \\{   a }   }", "\{(?R)*\}", m )
+msgbox, % m.len(1)
 
 
 

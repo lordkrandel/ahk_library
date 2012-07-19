@@ -8,6 +8,7 @@
 bin/
 tmp/
 scripts/
+docs/
 *.tmp
 *.bak
 *.swp

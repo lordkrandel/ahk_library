@@ -1,10 +1,13 @@
-#include lib\\lib_eventdispatcher.ahk
+#include lib\lib_CORE.ahk
+#include lib\\lib_WINDOW.ahk
+#include lib\\lib_CONTROL.ahk
+#include lib\\lib_EVENTDISPATCHER.ahk
 
-class g {  // ______________________________________________
+class g {
 
-    win        := { name  : ""
-                  , title : ""
-                  , geom: { w: 500, h: 340, x: "center", y: "center"} }
+    win := { name  : ""
+           , title : ""
+           , geom: { w: 500, h: 340, x: "center", y: "center"} }
 
     properties := { "geom" : "getPos" }
 
@@ -13,6 +16,14 @@ class g {  // ______________________________________________
         if (n){
             return this[n]()
         }
+    }
+
+    controlSet( c, subcommand = "", param3 = "" ){
+        GuiControl, % this.win.name ":" subcommand, % c , % param3
+    }
+    controlGet( c, subcommand = "", param4 = "" ){
+        GuiControlGet, s, % this.win.name ":" subcommand, % c, % param4
+        return % s
     }
 
     close(){
@@ -47,14 +58,6 @@ class g {  // ______________________________________________
     }
     size(){
     }
-    controlSet( c, subcommand = "", param3 = "" ){
-        GuiControl, % this.win.name ":" subcommand, % c , % param3
-    }
-    controlGet( c, subcommand = "", param4 = "" ){
-        GuiControlGet, s, % this.win.name ":" subcommand, % c, % param4
-        return % s
-    }
-
     getPos(){
         WinGetPos, x, y, w, h, % "ahk_id " this.win.hwnd
         return { x: x, y: y, w: w, h: h}

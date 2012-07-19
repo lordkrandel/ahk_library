@@ -1,6 +1,6 @@
-#include lib\\lib_core.ahk
+#include lib\lib_core.ahk
 
-class EventDispatcher{ // _______________________________________________
+class EventDispatcher{ 
 
     static stack    := {}
     static controls := {}

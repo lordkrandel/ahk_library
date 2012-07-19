@@ -1,9 +1,12 @@
+// Provides common arithmetic, logic and algebric functions.
 class Math {
 
-    xor(a,b){
+
+    // Function Xor
+    xor(a, b) {
         return !!a && !b || !!b && !a
     }
-    min(x,y = ""){
+    min(x,y = "") {
         if y is not number
         {
             if (y == ""){
@@ -12,7 +15,7 @@ class Math {
         }
         return x > y ? y : x
     }
-    max(x,y = ""){
+    max(x,y = "") {
         if y is not number
         {
             if (y == ""){
@@ -21,7 +24,7 @@ class Math {
         }
         return x > y ? x : y
     }
-    minObj(x){
+    minObj(x) {
         if (!isObject(x)){
             return
         }
@@ -37,7 +40,7 @@ class Math {
         }
         return c
     }
-    maxObj(x){
+    maxObj(x) {
         if (!isObject(x)){
             return
         }
@@ -53,11 +56,11 @@ class Math {
         }
         return c
     }
-    between(x,y,z){
-        return ( x < y && y < z )
+    between(x,y,z) {
+        return ( x <= y && y <= z )
     }
 
-    changeBase(n, b = 10){
+    changeBase(n, b = 10) {
         if (b > 16){
             throw "Cannot changeBase with base > 16"
         }
@@ -68,13 +71,13 @@ class Math {
         }
         return s
     }
-    hex(n){
+    hex(n) {
         return % Math.changeBase(n,16)
     }
-    oct(n){
+    oct(n) {
         return % Math.changeBase(n,8)
     }
-    fromHex(n){
+    fromHex(n) {
         m := % "0x" n
         return % m + 0
     }

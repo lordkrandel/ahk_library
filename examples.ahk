@@ -1,7 +1,6 @@
 
 #include lib\lib_CORE.ahk
 #include lib\\lib_G.ahk
-#include lib\\lib_GUI.ahk
 #include lib\\lib_JSON.ahk
 
 t:= {}
@@ -54,7 +53,7 @@ class SampleWindow extends g {
 
     win := { name:     "Example"
            , title:    "sampleWindow"
-           , geom:     { w : 400, h: 240         }
+           , geom:     { w : 400, h: 240 }
            , hotkeys:  { "F2"      : "f2slot"    }   // Defining callbacks for hotkeys
            , controls: { "Button1" : "close"
                        , "Button2" : "JSONtest"  } } // Defining callbacks for control g-labels
@@ -90,8 +89,11 @@ class SampleWindow extends g {
         // JSON and GUI examples ___________________________
         id    := this.win.hwnd
         j     := new JSONParser("json.js")
-        ctrls := Gui.getControls(id)
-        Msgbox, % j.stringify(ctrls)
+        o := {}
+        for k, v in new Window( this.hwnd ).controls {
+            o.insert( k, v.getDescription() )
+        }
+        Msgbox, % j.stringify(o)
 
     }
 
@@ -101,6 +103,9 @@ class SampleWindow extends g {
 dw := new SampleWindow()
 dw.show()
 
+/*
+    TESTING
+*/
 // Loop, lib\\lib_*.ahk
 // {
 //     SplitPath, A_loopfilename,,,, name
@@ -124,8 +129,8 @@ dw.show()
 // }
 // 
 
-i := RegexMatch("{  \\{   a }   }", "\{(?R)*\}", m )
-msgbox, % m.len(1)
+//i := RegexMatch("{  \\{   a }   }", "\{(?R)*\}", m )
+//msgbox, % m.len(1)
 
 
 

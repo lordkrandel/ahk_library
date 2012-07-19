@@ -2,12 +2,13 @@
 
 class Control {
 
-    properties := { geom    : "getPos"
-                  , text    : "getText"
-                  , style   : "getOtherProperty"
-                  , exStyle : "getOtherProperty"
-                  , checked : "getOtherProperty"
-                  , visible : "getOtherProperty" }
+    properties := { geom        : "getPos"
+                  , text        : "getText"
+                  , description : "getDescription"
+                  , style       : "getOtherProperty"
+                  , exStyle     : "getOtherProperty"
+                  , checked     : "getOtherProperty"
+                  , visible     : "getOtherProperty" }
 
     __Get(aname) {
         n := this.properties[aname]

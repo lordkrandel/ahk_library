@@ -23,11 +23,9 @@ class Core {
         }
     }
     firstValid( a* ){
-        if (isobject(arr)){
-            for k,v in a {
-                if (!!v){
-                    return v
-                }
+        for k,v in a {
+            if (!!v){
+                return v
             }
         }
     }

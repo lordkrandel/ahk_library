@@ -72,7 +72,7 @@ class SampleWindow extends g {
         ; When F2 is pressed
         Msgbox, % "You just pressed F2`n"
                 . "`n" "title: " this.title
-                . Window.geomToString( this.geom )
+                . "`n" Window.geomToString( this.geom )
     }
     close(){
         ; On close

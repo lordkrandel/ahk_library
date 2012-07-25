@@ -57,7 +57,7 @@ class g extends Window{
         Gui, %g%: Submit
     }
     escape(){
-        this.close()
+        this.hide()
     }
     size(){
     }

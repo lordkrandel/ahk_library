@@ -5,15 +5,15 @@ class EventDispatcher{
     static stack    := {}
     static controls := {}
     registerGui(w){
-        EventDispatcher.stack[w.win.hwnd] := w
-        EventDispatcher.stack[w.win.name] := w
+        EventDispatcher.stack[w.hwnd] := w
+        EventDispatcher.stack[w.name] := w
         EventDispatcher.toggleHotkeys(w, "On")
     }
 
     toggleHotkeys(w, to = "Toggle"){
 
         for k,v in w.win.hotkeys {
-            Hotkey, IfWinactive, % "ahk_id " w.win.hwnd
+            Hotkey, IfWinactive, % "ahk_id " w.hwnd
             Hotkey, % k, EventDispatcher, %to%
             Hotkey, IfWinactive,
         }
@@ -21,11 +21,11 @@ class EventDispatcher{
     }
 
     unregisterGui(w){
-        // Object.remove() adjusts integer indexes
-        // That's bad because the hwnd is an integer
+        ; Object.remove() adjusts integer indexes
+        ; That's bad because the hwnd is an integer
         EventDispatcher.toggleHotkeys(w, "Off")
-        EventDispatcher.stack[w.win.hwnd] := ""
-        EventDispatcher.stack[w.win.name] := ""
+        EventDispatcher.stack[w.hwnd] := ""
+        EventDispatcher.stack[w.name] := ""
     }
 
     event(){

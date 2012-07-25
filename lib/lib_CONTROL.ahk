@@ -43,8 +43,8 @@ class Control {
         return txt
     }
     getOtherProperty(aname){
-        ControlGet, %aname%, %aname%,,, % "ahk_id " this.hwnd
-        return style
+        ControlGet, result, %aname%,,, % "ahk_id " this.hwnd
+        return result
     }
 }
 

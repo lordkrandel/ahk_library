@@ -1,8 +1,8 @@
-#include lib\\lib_STRING.ahk
+#include lib\lib_STRING.ahk
 
 class JSONParser {
 
-    // The parser requires a valid JSLint source file as a path
+    ; The parser requires a valid JSLint source file as a path
     __New(jsParserPath) {
         try{
             jsParserText := fileopen( jsParserPath, "r").read()
@@ -42,8 +42,8 @@ class JSONParser {
                 jvalue := this.stringify( v, spacer, precIndent + 4 )
                 o.insert( indent jkey jsep jvalue )
             }
-            s := ",\n".join(o)
-            s := s.q("\n")
+            s := ",`n".join(o)
+            s := s.q("`n")
             s := s.q("{", spacer.fill(precIndent) "}" )
         } else if ( ! isFunc(val) ) {
             s := this.quote(val)
@@ -52,7 +52,7 @@ class JSONParser {
     }
 
     quote(val){
-        return Regexreplace(val, """", "\\""").qq()
+        return Regexreplace(val, """", "\""").qq()
     }
 
     convert(j) {

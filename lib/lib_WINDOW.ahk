@@ -6,6 +6,14 @@ class Window {
     properties := { geom     : "getPos"
                   , controls : "getControls" }
 
+    geomToString( o ) {
+        s := o.x ? " x" o.x : ""
+           . o.y ? " y" o.y : ""
+           . o.w ? " w" o.w : ""
+           . o.h ? " h" o.h : ""
+        return RegexReplace(s, "^\s*", "")
+    }
+
     __New(hwnd){
 
         if hwnd is not number
@@ -28,16 +36,11 @@ class Window {
         }
     }
 
-    getPos(){
-        WinGetPos, x, y, w, h, % "ahk_id " this.hwnd
-        return { x: x, y: y, w: w, h: h }
-    }
-
     getControls() {
         if (!this.ctrls){
             o := {}
             WinGet, list, ControlList, % "ahk_id " this.hwnd
-            for k, v in list.split("\n"){
+            for k, v in list.split("`n"){
                 o.insert( v, new Control(this.hwnd, v) )
             }
             this.ctrls := o
@@ -45,6 +48,21 @@ class Window {
         }
         return this.ctrls
     }
+    getPos(){
+        WinGetPos, x, y, w, h, % "ahk_id " this.hwnd
+        return { x: x, y: y, w: w, h: h }
+    }
+    setPos( x = "", y = "", w = "", h = "" ){
+        if (isobject(x)){
+            o := x
+            x := o.x
+            y := o.y
+            h := o.h
+            w := o.w
+        }
+        WinMove, % "ahk_id " this.hwnd,, % x, % y, % w, % h
+    }
+
 
 }
 

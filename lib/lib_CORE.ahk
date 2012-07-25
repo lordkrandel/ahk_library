@@ -1,5 +1,3 @@
-#EscapeChar \
-#CommentFlag //
 #NoEnv
 
 #InstallKeybdHook
@@ -9,10 +7,13 @@
 SendMode Input
 SetTitleMatchMode, 2
 
-#include lib\\lib_STRING.ahk
-#include lib\\lib_MATH.ahk
+#include lib\lib_STRING.ahk
+#include lib\lib_MATH.ahk
 
+; Universal basic functions that should be accessible anywhere
 class Core {
+
+    ; Returns an object with keys and values swapped
     swap(arr){
         if (isobject(arr)){
             o := {}
@@ -22,6 +23,8 @@ class Core {
             return o
         }
     }
+
+    ; Returns the first non null/zero element in the arguments
     firstValid( a* ){
         for k,v in a {
             if (!!v){
@@ -29,6 +32,8 @@ class Core {
             }
         }
     }
+
+    ; Returns the (first) position of an element in an array or object
     find( arr, val ){
         if (isobject(arr)){
             for k, v in arr {
@@ -38,8 +43,9 @@ class Core {
             }
         }
     }
+
+    ; Timer function. First call starts, second call stops and returns the delta
     cpu(){
-        // First call starts, second call stops and gives result
         static count := 0
         t := Core.firstValid(count)
         DllCall("QueryPerformanceCounter", "Int64*", count)
@@ -49,6 +55,8 @@ class Core {
             return delta
         }
     }
+
+    ; Returns all the keys of an object
     keys(arr){
         if (isobject(arr)){
             o := {}

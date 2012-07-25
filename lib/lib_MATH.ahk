@@ -1,8 +1,8 @@
-// Provides common arithmetic, logic and algebric functions.
+; Provides common arithmetic, logic and algebric functions.
 class Math {
 
 
-    // Function Xor
+    ; Function Xor
     xor(a, b) {
         return !!a && !b || !!b && !a
     }
@@ -67,7 +67,7 @@ class Math {
         s := ""
         while n {
             s := % SubStr("0123456789ABCDEF",  mod(n,b)+1, 1) s
-            n := n \/\/ b
+            n := n // b
         }
         return s
     }

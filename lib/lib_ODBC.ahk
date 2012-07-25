@@ -1,4 +1,4 @@
-#include lib\\lib_CORE.ahk
+#include lib\lib_CORE.ahk
 
 class Query {
     query := ""
@@ -86,7 +86,7 @@ class ODBC {
 class OdbcReg {
 
     static baseKey := "HKEY_LOCAL_MACHINE"
-    static subKey  := "SOFTWARE\\ODBC\\ODBC.INI\\"
+    static subKey  := "SOFTWARE\ODBC\ODBC.INI\"
     static default := { dsn: "", owner: "" }
     static dsnList := ""
 
@@ -120,7 +120,7 @@ class OdbcReg {
         baseKey := OdbcReg.baseKey
         subKey  := OdbcReg.subKey "ODBC Data Sources"
 
-        // I use the built-in sort
+        ; I use the built-in sort
         Loop, %baseKey%, %subKey%
         {
             s .= ( s ? "," : "") . a_loopregname

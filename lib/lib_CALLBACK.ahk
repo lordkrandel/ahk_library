@@ -1,6 +1,6 @@
 class Callback {
 
-    // A sort of auto_ptr for callbacks
+    ; A sort of auto_ptr for callbacks
 
     event(){
         Msgbox, % this.__class " callback triggered"

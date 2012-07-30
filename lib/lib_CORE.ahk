@@ -34,7 +34,7 @@ class Core {
     }
 
     ; Returns the (first) position of an element in an array or object
-    find( arr, val ){
+    in( arr, val ){
         if (isobject(arr)){
             for k, v in arr {
                 if ( v == val ){

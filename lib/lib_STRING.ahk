@@ -2,6 +2,22 @@
 ; Represents any string variable
 class String {
 
+    is(type){
+        if this is %type%
+        {
+            return 1
+        }
+        return 0
+    }
+
+    ; specialize the "in" function from the Core library
+    in( hs ){
+        if ( isObject(hs)){
+            return Core.in(hs, this)
+        }
+        return instr(hs, this)
+    }
+
     ; Returns an array of substrings, split when delimiters are found
     ; -   *delimiters*: characters that split the string
     ; -   *omitchars* (opt): characters to be trimmed out at the sides of each substring

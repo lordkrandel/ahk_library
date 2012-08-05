@@ -1,4 +1,4 @@
-#include lib\lib_core.ahk
+#include <lib_core>
 
 class EventDispatcher{ 
 

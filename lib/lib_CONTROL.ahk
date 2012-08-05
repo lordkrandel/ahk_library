@@ -1,5 +1,5 @@
-#include lib\lib_CORE.ahk
-#include lib\lib_LISTBOX.ahk
+#include <lib_CORE>
+#include <lib_LISTBOX>
 
 class Control {
 

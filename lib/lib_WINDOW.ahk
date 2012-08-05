@@ -1,5 +1,5 @@
-#include lib\lib_CORE.ahk
-#include lib\lib_CONTROL.ahk
+#include <lib_CORE>
+#include <lib_CONTROL>
 
 class Window {
 

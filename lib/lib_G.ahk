@@ -1,6 +1,6 @@
-#include lib\lib_CORE.ahk
-#include lib\lib_WINDOW.ahk
-#include lib\lib_EVENTDISPATCHER.ahk
+#include <lib_CORE>
+#include <lib_WINDOW>
+#include <lib_EVENTDISPATCHER>
 
 class g extends Window{
 

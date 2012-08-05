@@ -1,4 +1,4 @@
-#include lib\lib_core.ahk
+#include <lib_core>
 
 class Log {
 
@@ -6,7 +6,7 @@ class Log {
             , info:  "I"
             , error: "E" }
 
-    write( s, king = "info", f = "" ){
+    write( s, kind = "info", f = "" ){
         static file := Core.firstValid(f, file, "log\" regexreplace(A_scriptname, ".ahk", "") ".log" )
         FormatTime, time, %A_Now%, MM/dd hh:mm:ss
         s := time "`t" Log.code[kind] "`t" s

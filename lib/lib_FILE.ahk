@@ -1,4 +1,4 @@
-#include lib\lib_CORE.ahk
+#include <lib_CORE>
 
 class File {
 

@@ -7,8 +7,8 @@
 SendMode Input
 SetTitleMatchMode, 2
 
-#include lib\lib_STRING.ahk
-#include lib\lib_MATH.ahk
+#include <lib_STRING>
+#include <lib_MATH>
 
 ; Universal basic functions that should be accessible anywhere
 class Core {

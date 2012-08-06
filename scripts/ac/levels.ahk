@@ -1,4 +1,4 @@
-#include lib\lib_odbc.ahk
+#include <lib_odbc>
 
 class level {
     odbc := ""

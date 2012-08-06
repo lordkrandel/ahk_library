@@ -1,4 +1,4 @@
-#include lib\lib_g.ahk
+#include <lib_g>
 
 class optionsDialog extends g {
 

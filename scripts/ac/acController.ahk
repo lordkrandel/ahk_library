@@ -1,5 +1,5 @@
-#include lib\lib_odbc.ahk
-#include scripts\ac\levels.ahk
+#include <lib_odbc>
+#include %A_ScriptDir%\scripts\ac\levels.ahk
 
 class acController {
 

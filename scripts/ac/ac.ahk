@@ -1,7 +1,7 @@
-#include lib\lib_g.ahk
-#include lib\lib_CONTROL.ahk
-#include scripts\ac\optionsDialog.ahk ; Options Dialog
-#include scripts\ac\acController.ahk  ; Controller
+#include <lib_g>
+#include <lib_CONTROL>
+#include %A_ScriptDir%\scripts\ac\optionsDialog.ahk ; Options Dialog
+#include %A_ScriptDir%\scripts\ac\acController.ahk  ; Controller
 
 :?*:dba.::
 !Space::

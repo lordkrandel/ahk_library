@@ -9,18 +9,30 @@ AHK_L has Object Oriented design, but very few object are included in the core.
 Included
 ---------------------------
 
-    lib_CORE.ahk            // Common functions
-    lib_STRING.ahk          // string manipulation
-    lib_MATH.ahk            // math, algebra, base change
-    lib_LOG.ahk             // logging
-    lib_JSON.ahk            // JSON parser ( requires valid json2.js source file )
+    lib_CALLBACK            // Auto_ptr thing for AHK callbacks
+    lib_CORE                // Common functions
+    lib_STRING              // string manipulation
+    lib_MATH                // math, algebra, base change
+    lib_LOG                 // logging
+    lib_JSON                // JSON parser ( requires valid json2.js source file )
                             // [https://github.com/douglascrockford/JSON-js]
-    lib_G.ahk               // GUI classes library
-    lib_GUI.ahk             // External windows handling (stub)
-    lib_EVENTDISPATHCER.ahk // GUI events Object Oriented handling
-    lib_ODBC.ahk            // Database connection library
-    lib_SYNK.ahk            // Utility for building auto-updating programs
-    lib_TRAYTIP.ahk         // Simple traytip library
+    lib_G                   // GUI classes library
+    lib_GUI                 // External windows handling (stub)
+    lib_CONTROL             // Windows Controls handling
+    lib_WINDOW              // Windows handling
+    lib_EVENTDISPATHCER     // GUI events Object Oriented handling
+    lib_ODBC                // Database connection library
+    lib_SYNK                // * Utility for building auto-updating programs
+    lib_TRAYTIP             // Simple traytip library
+    lib_FILE                // I/O, files, stdin, stdout
+    lib_SOCKET              // Socket class ( first attempt )
+    lib_WIN32               // Win32 Mangling
+    lib_WIN32_constants     // * Win32 constants
+    lib_WIN32_functions     // * Win32 functions
+    lib_WIN32_types         // * Win32 types
+
+* early stage
+
 
 Examples
 ------------------------

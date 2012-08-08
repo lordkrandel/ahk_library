@@ -11,7 +11,7 @@ Class Win32 {
     init(){
         #include <lib_WIN32_constants>
         #include <lib_WIN32_functions>
-        #include <lib_WIN32_structs>
+        #include <lib_WIN32_types>
     }
 
     ; Call test

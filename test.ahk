@@ -7,10 +7,12 @@ s.send("hi!")
 s.receive()
 ExitApp
 
+; address
 class SocketAddress {
 
     size   := 16
 
+    ; constructor
     __new( host="127.0.0.1", port = 18864 ){
 
         this.host   := host
@@ -27,6 +29,7 @@ class SocketAddress {
 
     }
 
+    ; return as a struct
     getStruct(){
         sockAddr   := 0
         VarSetCapacity(sockAddr, this.size)
@@ -40,11 +43,13 @@ class SocketAddress {
     }
 
 }
-class Socket {
 
+
+class Socket {
 
     settings := {}
 
+    ;constructor
     __new( host, port ){
 
         this.addr := new SocketAddress(host, port)
@@ -58,6 +63,7 @@ class Socket {
 
     }
 
+    ; connect
     connect(){
 
         this.socket := Win32.call("Ws2_32\socket", Win32.AF_INET, Win32.SOCK_STREAM, Win32.IPPROTO_TCP )
@@ -75,6 +81,7 @@ class Socket {
 
     }
 
+    ; send 
     send( data ) {
         ret := Win32.call("ws2_32\send", this.socket, data, 2 * ( strlen(data) + 1 ), 0 )
         if (ret < 0){
@@ -82,10 +89,12 @@ class Socket {
         }
     }
 
+    ; event
     event(buf){
         Msgbox, % buf
     }
 
+    ; receive
     receive(size = 8192){
 
         buf := ""
@@ -118,15 +127,19 @@ class Socket {
         }
     }
 
-
+    ; close
     close(){
         if ( ! ( ret := Win32.call("ws2_32\closesocket", this.handle) ) ){
             throw this.error("Cannot close socket!")
         }
     }
+
+    ; error
     error(s){
         return % s "`n" "error:" this.getLastError() "`n" "handle: " this.handle
     }
+
+    ; getlasterror
     getLastError( size=8192){
         err := Win32.call("Ws2_32\WSAGetLastError")
         if (!err){
@@ -137,10 +150,12 @@ class Socket {
         return ( ret >= 0 ? err ", " txt : err)
     }
 
+    ; delete
     __delete(){
         Win32.call("ws2_32\WSACleanup")
     }
 
+    ;set async
     setAsync( msg = 0x5000 ) {
         ret := Win32.call("ws2_32\WSAAsyncSelect", this.socket, A_ScriptHwnd, msg, Win32.FD_READ + Win32.FD_CLOSE )
         if (!ret){
@@ -150,28 +165,4 @@ class Socket {
     }
 
 }
-/*
 
-# lib_socket.ahk test
-import socket, time
-
-host    = '127.0.0.1'
-port    = 18664
-backlog = 5
-size    = 1024
-s       = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
-# s.setblocking(True)
-s.bind( (host,port) )
-s.listen(backlog)
-
-client, address = s.accept()
-while 1:
-    data = client.recv(size)
-    if data:
-        # AHK_L Unicode
-        print(data.decode('utf-16LE'))
-        time.sleep(1)
-        client.send(data)
-
-#client.close()
-*/

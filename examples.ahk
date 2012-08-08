@@ -1,7 +1,8 @@
 
-#include lib\lib_CORE.ahk
-#include lib\lib_G.ahk
-#include lib\lib_JSON.ahk
+#include <lib_CORE>
+#include <lib_G>
+#include <lib_JSON>
+#include <lib_SOCKET>
 
 t:= {}
 
@@ -99,6 +100,36 @@ class SampleWindow extends g {
 dw := new SampleWindow()
 dw.show()
 
+
+; lib_SOCKET.ahk tests
+
+s := new Socket("127.0.0.1", 18664)
+s.send("hi!")
+s.receive()
+
+; Python test as a server
+;
+; import socket, time
+; host    = '127.0.0.1'
+; port    = 18664
+; backlog = 5
+; size    = 1024
+; s       = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+; # s.setblocking(True)
+; s.bind( (host,port) )
+; s.listen(backlog)
+; client, address = s.accept()
+; while 1:
+;     data = client.recv(size)
+;     if data:
+;         # AHK_L Unicode
+;         print(data.decode('utf-16LE'))
+;         time.sleep(1)
+;         client.send(data)
+; 
+; #client.close()
+
+ExitApp
 
 
 

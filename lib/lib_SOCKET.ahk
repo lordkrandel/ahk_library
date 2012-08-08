@@ -10,6 +10,7 @@ class SocketAddress {
 
         this.host   := host
         this.port   := port
+
         this.__port := Win32.call("Ws2_32\htons", port)
 
         ; convert the address to ANSI
@@ -76,6 +77,7 @@ class Socket {
 
     ; send 
     send( data ) {
+
         ret := Win32.call("ws2_32\send", this.socket, data, 2 * ( strlen(data) + 1 ), 0 )
         if (ret < 0){
             throw this.error("Error sending data")

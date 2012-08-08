@@ -22,10 +22,9 @@ Class Win32 {
             callParams.insert(params[k])
         }
         v := Win32.functions[aname][k+1]
-        if ( v ){
-            callParams.insert(v)
-        }
-
+        ; if ( v ){
+        ;     callParams.insert(v)
+        ; }
         return DllCall(aname, callParams*)
     }
 

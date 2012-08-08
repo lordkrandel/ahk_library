@@ -55,9 +55,10 @@ class SampleWindow extends g {
     name  := "Example"
     title := "sampleWindow"
     geom  := { w : 400, h: 240 }
-    win := { hotkeys:  { "F2"      : "f2slot"    }   ; Defining callbacks for hotkeys
+    win := { hotkeys:  { "F2"      : "f2slot"      }   ; Defining callbacks for hotkeys
            , controls: { "Button1" : "close"
-                       , "Button2" : "JSONtest"  } } ; Defining callbacks for control g-labels
+                       , "Button2" : "JSONtest"
+                       , "Button3" : "SOCKETtest"  } } ; Defining callbacks for control g-labels
 
     __new(){
         global t
@@ -65,8 +66,9 @@ class SampleWindow extends g {
 
         ; Print the results of the tests
         Gui, %g%: Add, text,    x10 y10, % "`n`n".join(["Test Results:", "`n".join(t), "Press F2 for window info"])
-        Gui, %g%: Add, Button,  x280 y200 w100 h25 gEventDispatcher, Close
+        Gui, %g%: Add, Button,  x80  y200 w100 h25 gEventDispatcher, Close
         Gui, %g%: Add, Button,  x180 y200 w100 h25 gEventDispatcher, JSON Test
+        Gui, %g%: Add, Button,  x280 y200 w100 h25 gEventDispatcher, Socket Send Test
     }
 
     f2slot(){
@@ -79,6 +81,32 @@ class SampleWindow extends g {
         ; On close
         base.close()
         ExitApp
+    }
+
+    SOCKETtest(){
+        s := new Socket("127.0.0.1", 18664)
+        s.send("hi!")
+        ; s.receive()
+
+        ; Python test as a server
+        ; import socket, time
+        ; host    = '127.0.0.1'
+        ; port    = 18664
+        ; backlog = 5
+        ; size    = 1024
+        ; s       = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+        ; # s.setblocking(True)
+        ; s.bind( (host,port) )
+        ; s.listen(backlog)
+        ; client, address = s.accept()
+        ; while 1:
+        ;     data = client.recv(size)
+        ;     if data:
+        ;         # AHK_L Unicode
+        ;         print(data.decode('utf-16LE'))
+        ;         time.sleep(1)
+        ;         client.send(data)
+        ; #client.close()
     }
 
     JSONtest(){
@@ -101,35 +129,7 @@ dw := new SampleWindow()
 dw.show()
 
 
-; lib_SOCKET.ahk tests
 
-s := new Socket("127.0.0.1", 18664)
-s.send("hi!")
-s.receive()
-
-; Python test as a server
-;
-; import socket, time
-; host    = '127.0.0.1'
-; port    = 18664
-; backlog = 5
-; size    = 1024
-; s       = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
-; # s.setblocking(True)
-; s.bind( (host,port) )
-; s.listen(backlog)
-; client, address = s.accept()
-; while 1:
-;     data = client.recv(size)
-;     if data:
-;         # AHK_L Unicode
-;         print(data.decode('utf-16LE'))
-;         time.sleep(1)
-;         client.send(data)
-; 
-; #client.close()
-
-ExitApp
 
 
 

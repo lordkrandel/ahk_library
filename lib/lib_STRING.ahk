@@ -55,6 +55,12 @@ class String {
         return ret
     }
 
+    ; Wrapper for stringreplace
+    replace( from, to = "", times = "A" ){
+        StringReplace, s, this, % from, % to, % times
+        return s
+    }
+
     ; Returns a substring
     slice(start=1, end=0) {
         if (end){

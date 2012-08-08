@@ -1,13 +1,6 @@
 #include <lib_WIN32>
 
-;Win32.MessageBoxW(0, "a", Win32.FD_CLOSE.replace("3", "x"), 0)
-
-s := new Socket("127.0.0.1", 18664)
-s.send("hi!")
-s.receive()
-ExitApp
-
-; address
+; SocketAddress
 class SocketAddress {
 
     size   := 16
@@ -44,7 +37,7 @@ class SocketAddress {
 
 }
 
-
+; Socket
 class Socket {
 
     settings := {}

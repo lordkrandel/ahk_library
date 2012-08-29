@@ -48,6 +48,39 @@ t.insert( "abcdefghijklmnopqrstuvxyz".right(4).righttrim(2).toUpper() )
 
 
 
+; Object examples
+
+numbers := [0,1,2,3,4,5]
+
+; map
+twice := Obj.map(numbers, "multiply")
+thrice := Obj.map(numbers, Func("multiply"), 3)
+
+multiply(val, p = 2)
+{
+	return val * p
+}
+
+; filter
+odds := Obj.filter(numbers, "odd")
+
+odd(key, val)
+{
+	return val & 1
+}
+
+; values
+children := { "Frank" : 17, "John" : 3, "Sara" : 17 }
+ages := Obj.values(children)
+
+; for display only
+j := new JSONParser(A_ScriptDir "\json.js")
+t.insert(j.stringify(twice).replace("`n"))
+t.insert(j.stringify(thrice).replace("`n"))
+t.insert(j.stringify(odds).replace("`n"))
+t.insert(j.stringify(ages).replace("`n"))
+
+
 ; G examples
 
 class SampleWindow extends g {

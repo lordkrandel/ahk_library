@@ -1,12 +1,3 @@
-#NoEnv
-
-#InstallKeybdHook
-#SingleInstance force
-#HotkeyInterval 100
-
-SendMode Input
-SetTitleMatchMode, 2
-
 #include <lib_STRING>
 #include <lib_MATH>
 

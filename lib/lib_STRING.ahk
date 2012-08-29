@@ -10,10 +10,10 @@ class String {
         return 0
     }
 
-    ; specialize the "in" function from the Core library
+    ; specialize the "in" function from the OBJ library
     in( hs ){
         if ( isObject(hs)){
-            return Core.in(hs, this)
+            return Obj.in(hs, this)
         }
         return instr(hs, this)
     }

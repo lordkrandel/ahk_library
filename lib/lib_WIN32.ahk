@@ -1,6 +1,6 @@
-#include <lib_CORE>
-#include <lib_FILE>
-#include <lib_STRING>
+#include lib_CORE.ahk
+#include lib_FILE.ahk
+#include lib_STRING.ahk
 
 ; static global class
 Win32.init()
@@ -9,9 +9,9 @@ Win32.init()
 Class Win32 {
 
     init(){
-        #include <lib_WIN32_constants>
-        #include <lib_WIN32_functions>
-        #include <lib_WIN32_types>
+        #include lib_WIN32_constants.ahk
+        #include lib_WIN32_functions.ahk
+        #include lib_WIN32_types.ahk
     }
 
     ; Call test

@@ -1,4 +1,4 @@
-#include <lib_core>
+#include lib_CORE.ahk
 
 class Log {
 

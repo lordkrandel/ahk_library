@@ -1,4 +1,4 @@
-#include <lib_CORE>
+#include lib_CORE.ahk
 
 class Query {
     query := ""

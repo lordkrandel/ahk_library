@@ -1,4 +1,4 @@
-#include <lib_WIN32>
+#include lib_WIN32.ahk
 
 ; SocketAddress
 class SocketAddress {

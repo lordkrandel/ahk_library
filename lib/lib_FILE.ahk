@@ -1,5 +1,5 @@
-#include <lib_CORE>
-#include <lib_WIN32>
+#include lib_CORE.ahk
+#include lib_WIN32.ahk
 
 ; File object wrapper
 class File {

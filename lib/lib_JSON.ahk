@@ -1,4 +1,4 @@
-#include <lib_STRING>
+#include lib_STRING.ahk
 
 class JSONParser {
 

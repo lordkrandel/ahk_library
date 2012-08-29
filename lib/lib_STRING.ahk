@@ -2,6 +2,11 @@
 ; Represents any string variable
 class String {
 
+	init()
+	{
+		"".base.base := String
+	}
+
     is(type){
         if this is %type%
         {
@@ -279,5 +284,4 @@ class String {
         return ret
     }
 }
-"".base.base := String
 

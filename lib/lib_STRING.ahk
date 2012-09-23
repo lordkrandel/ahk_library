@@ -1,3 +1,4 @@
+#include <lib_CORE>
 
 ; Represents any string variable
 class String {
@@ -26,7 +27,9 @@ class String {
         s := this
         Loop, Parse, s, % delimiters, % omitchars
         {
-            o.insert( a_loopField )
+            if (trim(a_loopfield) != "" ){
+                o.insert( a_loopField )
+            }
         }
         return o
     }

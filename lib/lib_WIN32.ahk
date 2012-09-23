@@ -1,30 +1,25 @@
 #include <lib_CORE>
-#include <lib_FILE>
 #include <lib_STRING>
 
-; static global class
-Win32.init()
-
-; Win32 API static class
+; Win32 API class
 Class Win32 {
 
-    init(){
+    __new(){
         #include <lib_WIN32_constants>
         #include <lib_WIN32_functions>
         #include <lib_WIN32_types>
     }
 
-    ; Call test
-    call(aname, params*){
+    __call(aname, params*){
         callParams := []
-        for k, v in Win32.functions[aname] {
-            callParams.insert(trim(v))
+        for k, v in params {
+            callParams.insert(Win32.functions[aname][k])
             callParams.insert(params[k])
         }
         v := Win32.functions[aname][k+1]
-        ; if ( v ){
-        ;     callParams.insert(v)
-        ; }
+        if ( v ){
+            callParams.insert(v)
+        }
         return DllCall(aname, callParams*)
     }
 

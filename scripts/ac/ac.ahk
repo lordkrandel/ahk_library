@@ -39,7 +39,7 @@ class autoComplete extends g {  ; ________________________
                          , "^d"       : "deselectAll"
                          , "^o"       : "odbcConfig"   }
              , controls: { "Edit1"    : "filter"     } }
-    geom       := { w: 350, h: 537 }
+    geom       := { w: 380, h: 537 }
     Entries    := ""
     hwnd       := ""
     controller := new acController(this)
@@ -51,7 +51,7 @@ class autoComplete extends g {  ; ________________________
         Gui, %g%: +Resize 
         Gui, %g%: Font, s10, Verdana
         Gui, %g%: Add, edit,    x0 y0  w300 h20 hwndhwndedit    gEventDispatcher
-        Gui, %g%: Add, listbox, x0 y20          hwndhwndlistbox Choose1 0x100 Multi
+        Gui, %g%: Add, listbox, x0 y20          hwndhwndlistbox Choose1 0x100 Multi +0x1000
 
         this.hwnd     := winhwnd
         this.listbox  := new Listbox(hwndlistbox)
@@ -94,7 +94,7 @@ class autoComplete extends g {  ; ________________________
         bl := A_BatchLines
         SetBatchLines, 1000
         p := this.getPos()
-        this.controlSet( this.listbox.hwnd, "Move", "w" p.w " h" p.h - 60 )
+        this.controlSet( this.listbox.hwnd, "Move", "w" p.w - 15 " h" p.h - 58)
         this.controlSet( this.win.edit,     "Move", "w" p.w )
         SetBatchLines, %bl%
     }

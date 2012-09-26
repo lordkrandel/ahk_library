@@ -3,6 +3,7 @@
 class level {
     odbc := ""
     __new(odbc){
+
         this.odbc := odbc
     }
     getDefault(){
@@ -42,18 +43,18 @@ class ownerlevel extends level{
 
         q =
         (
-           select distinct
-               table_owner
-           from
-               dbo.sp_tables()
-           order by
-               table_owner
-           ;
+            select distinct
+               creator
+            from
+               sys.syscatalog
+            order by
+               creator
+            ;
         )
         query := new Query( this.odbc.conn, q )
         s := ""
         loop {
-            s := s "|" query.rs.fields.item("table_owner").value
+            s := s "|" query.rs.fields.item("creator").value
             query.rs.movenext()
         } until (query.rs.EOF)
         return s
@@ -65,24 +66,27 @@ class tablelevel extends level{
     name := "Tables"
 
     getEntries(val){
+
+        val := val.toUpper()
         q =
         (
             select
-               table_name
+               creator,
+               tname
             from
-              dbo.sp_tables()
+               sys.syscatalog
             where
-               upper(table_owner) = '%val%'
+               upper(creator) = '%val%'
             order by
-               table_owner,
-               table_name
+               creator,
+               tname
             ;
         )
         this.odbc.connect()
         query := new Query(this.odbc.conn, q )
         s := ""
         loop {
-            s := s "|" query.rs.fields.item("table_name").value
+            s := s "|" query.rs.fields.item("tname").value
             query.rs.movenext()
         } until (query.rs.EOF)
         return s
@@ -115,6 +119,3 @@ class columnlevel extends level{
         return s
     }
 }
-
-
-

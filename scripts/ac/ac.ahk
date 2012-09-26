@@ -51,7 +51,7 @@ class autoComplete extends g {  ; ________________________
         Gui, %g%: +Resize 
         Gui, %g%: Font, s10, Verdana
         Gui, %g%: Add, edit,    x0 y0  w300 h20 hwndhwndedit    gEventDispatcher
-        Gui, %g%: Add, listbox, x0 y20          hwndhwndlistbox Choose1 0x100 Multi +0x1000
+        Gui, %g%: Add, listbox, x0 y20          hwndhwndlistbox Choose0 0x100 Multi +0x1000
 
         this.hwnd     := winhwnd
         this.listbox  := new Listbox(hwndlistbox)
@@ -85,7 +85,7 @@ class autoComplete extends g {  ; ________________________
                 this.listbox.choose(val)
             }
         } else {
-            this.listbox.choose(1)
+            this.listbox.choose(0)
         }
         controlfocus,, % "ahk_id " this.win.edit
 
@@ -93,9 +93,8 @@ class autoComplete extends g {  ; ________________________
     size(){
         bl := A_BatchLines
         SetBatchLines, 1000
-        p := this.getPos()
-        this.controlSet( this.listbox.hwnd, "Move", "w" p.w - 15 " h" p.h - 58)
-        this.controlSet( this.win.edit,     "Move", "w" p.w )
+        this.controlSet( this.listbox.hwnd, "Move", "w" A_GuiWidth " h" A_GuiHeight - 20)
+        this.controlSet( this.win.edit,     "Move", "w" A_GuiWidth )
         SetBatchLines, %bl%
     }
 
@@ -160,18 +159,26 @@ class autoComplete extends g {  ; ________________________
         t := this.controlGet( this.win.edit )
         entries := this.Entries
         if (t != ""){
-            arr := entries.split("|", "")
+            arr     := entries.split("|", "")
             entries := ""
+            top     := ""
             for k, v in arr {
-                if (instr(v,t)){
-                    entries .= "|" v
+                s := instr(v,t)
+                if ( s > 0 ){
+                    if ( s == 1 ){
+                        top     .= "|" v
+                    } else {
+                        entries .= "|" v
+                    }
                 }
             }
         }
-        entries := Core.firstValid( entries, "||" )
+
+        entries := top entries
+        entries := Core.firstValid( entries, "|" )
 
         this.listbox.set( entries )
-        this.listbox.choose(1)
+        this.listbox.choose(0)
     }
 
 }

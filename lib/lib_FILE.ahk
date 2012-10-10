@@ -5,8 +5,8 @@
 class File {
 
     ; properties and functions are forwarded
-    static properties := Core.swap([ "length", "ateof", "position", "pos", "encoding" ])
-    static functions  := Core.swap([ "read", "write", "readline", "writeline", "readnum"
+    static properties := Obj.swap([ "length", "ateof", "position", "pos", "encoding" ])
+    static functions  := Obj.swap([ "read", "write", "readline", "writeline", "readnum"
                                    , "writenum", "rawread", "rawwrite", "seek", "tell", "close"])
 
     ; create the file Object

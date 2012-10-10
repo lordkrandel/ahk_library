@@ -1,9 +1,14 @@
 #include <lib_STRING>
 #include <lib_MATH>
 #include <lib_OBJ>
-
+#include <lib_win32>
 ; Universal basic functions that should be accessible anywhere
 class Core {
+
+    init(){
+        String := new String()
+        Win32  := new Win32()
+    }
 
     ; Returns the first non null/zero element in the arguments
     firstValid( a* ){

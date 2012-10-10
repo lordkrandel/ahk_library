@@ -105,7 +105,7 @@ class OdbcReg {
 
         OdbcReg.loadDsnList()
         if (defaultDsn){
-            if (Core.find(OdbcReg.dsnList, defaultDsn)){
+            if (Obj.in(OdbcReg.dsnList, defaultDsn)){
                 return OdbcReg.loadDsn(defaultDsn)
             }
         }

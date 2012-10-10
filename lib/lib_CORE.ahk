@@ -8,7 +8,7 @@ class Core {
     ; Returns the first non null/zero element in the arguments
     firstValid( a* ){
         for k,v in a {
-            if (!!v){
+            if (v){
                 return v
             }
         }

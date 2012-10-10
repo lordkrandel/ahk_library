@@ -67,7 +67,7 @@ class Obj {
     filter(obj, callback, params*) {
         out := {}
         for key, val in obj {
-            if ( %callback%(key, val, params*) )
+            if ( %callback%(key, val, params*) ){
                out[key] := val
             }
         }

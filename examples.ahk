@@ -3,6 +3,8 @@
 #include <lib_G>
 #include <lib_JSON>
 #include <lib_SOCKET>
+Core.init()
+
 
 t:= {}
 

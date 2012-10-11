@@ -2,6 +2,7 @@
 #include <lib_MATH>
 #include <lib_OBJ>
 #include <lib_win32>
+
 ; Universal basic functions that should be accessible anywhere
 class Core {
 

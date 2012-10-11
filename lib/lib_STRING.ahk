@@ -3,6 +3,10 @@
 ; Represents any string variable
 class String {
 
+    __new(){
+        "".base.base := String
+    }
+
     is(type){
         if this is %type%
         {
@@ -282,5 +286,4 @@ class String {
         return ret
     }
 }
-"".base.base := String
 

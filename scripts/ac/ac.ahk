@@ -6,6 +6,7 @@
 :?*:dba.::
 !Space::
 
+    Core.init()
     ac.controller.lastHwnd  := WinExist("A")
 
     if (!ac){

@@ -1,6 +1,3 @@
-#include <lib_CORE>
-#include <lib_LISTBOX>
-
 class Control {
 
     properties := { geom        : "getPos"

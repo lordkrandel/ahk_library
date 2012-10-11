@@ -1,6 +1,3 @@
-#include <lib_CORE>
-#include <lib_STRING>
-
 ; Win32 API class
 Class Win32 {
 

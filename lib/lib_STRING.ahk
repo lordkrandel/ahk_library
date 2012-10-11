@@ -1,5 +1,3 @@
-#include <lib_CORE>
-
 ; Represents any string variable
 class String {
 

@@ -1,6 +1,3 @@
-#include <lib_CORE>
-#include <lib_CONTROL>
-
 class Window {
 
     properties := { geom     : "getPos"

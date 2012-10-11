@@ -1,6 +1,3 @@
-#include <lib_CORE>
-#include <lib_WIN32>
-
 ; File object wrapper
 class File {
 

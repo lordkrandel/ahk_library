@@ -1,5 +1,3 @@
-#include <lib_STRING>
-
 class JSONParser {
 
     ; The parser requires a valid JSLint source file as a path

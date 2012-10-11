@@ -1,5 +1,3 @@
-#include <lib_core>
-
 class Log {
 
     code := { warn:  "W"

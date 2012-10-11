@@ -1,5 +1,3 @@
-#include <lib_CORE>
-
 class Query {
     query := ""
     conn  := ""

@@ -1,7 +1,3 @@
-#include <lib_CORE>
-#include <lib_WINDOW>
-#include <lib_EVENTDISPATCHER>
-
 class g extends Window{
 
     name  := ""

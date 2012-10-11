@@ -1,5 +1,3 @@
-#include <lib_WIN32>
-
 ; SocketAddress
 class SocketAddress {
 

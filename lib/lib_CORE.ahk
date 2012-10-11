@@ -1,7 +1,14 @@
 #include <lib_STRING>
 #include <lib_MATH>
+#include <lib_LOG>
+#include <lib_ODBC>
 #include <lib_OBJ>
-#include <lib_win32>
+#include <lib_WIN32>
+#include <lib_WINDOW>
+#include <lib_G>
+#include <lib_CONTROL>
+#include <lib_LISTBOX>
+#include <lib_EVENTDISPATCHER>
 
 ; Universal basic functions that should be accessible anywhere
 class Core {

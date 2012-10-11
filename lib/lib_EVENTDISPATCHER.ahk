@@ -1,6 +1,4 @@
-#include <lib_core>
-
-class EventDispatcher{ 
+class EventDispatcher{
 
     static stack    := {}
     static controls := {}

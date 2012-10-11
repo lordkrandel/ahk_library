@@ -1,5 +1,3 @@
-#include <lib_g>
-#include <lib_CONTROL>
 #include %A_ScriptDir%\scripts\ac\optionsDialog.ahk ; Options Dialog
 #include %A_ScriptDir%\scripts\ac\acController.ahk  ; Controller
 

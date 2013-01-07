@@ -1,10 +1,10 @@
 class Obj {
 
     ; Returns an object with keys and values swapped
-    swap(arr){
-        if (isobject(arr)){
+    swap(obj){
+        if (isobject(obj)){
             o := {}
-            for k,v in arr {
+            for k,v in obj {
                 o.insert(v,k)
             }
             return o
@@ -12,9 +12,9 @@ class Obj {
     }
 
     ; Returns the (first) position of an element in an array or object
-    in( arr, val ){
-        if (isobject(arr)){
-            for k, v in arr {
+    in( obj, val ){
+        if (isobject(obj)){
+            for k, v in obj {
                 if ( v == val ){
                     return A_index
                 }
@@ -23,10 +23,10 @@ class Obj {
     }
 
     ; Returns all the keys of an object
-    keys(arr){
-        if (isobject(arr)){
+    keys(obj){
+        if (isobject(obj)){
             o := {}
-            for k, v in arr {
+            for k, v in obj {
                 o.insert(k)
             }
             return o
@@ -45,7 +45,7 @@ class Obj {
     }
 
     ; checks if an object is a pure, continuous array
-    isPureArray(obj, offset = 0){
+    isArray(obj, offset = 0){
         for key in obj {
             if ( key != (A_Index - offset ) ) {
                 return 0
@@ -74,4 +74,25 @@ class Obj {
         return out
     }
 
+    ; put the element at the end of the array
+    push( byref obj, el ){
+        return obj.insert( el )
+    }
+    ; pop out the element at the end of the array
+    pop( obj ){
+        return obj.remove()
+    }
+    ; shift an element at the start of the array
+    shift( byref obj, el ){
+        n := [ el ]
+        n.insert( obj* )
+        obj := n
+        return 1
+    }
+    ; unshift an element from the start of the array
+    unshift( obj ){
+        return obj.remove( obj.MinIndex() )
+    }
+
 }
+

@@ -148,7 +148,7 @@ class String {
     ; Returns the lowercase version of the string
     toLower(){
         stringlower, this, this
-        return % this
+        return this
     }
 
     ; Returns a formatted string (Sprintf-like)

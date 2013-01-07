@@ -12,3 +12,6 @@
     Win32.LANG_USER_DEFAULT             := 0x400
     Win32.INADDR_NONE                   := 0xffffffff
     Win32.MSG_WAITALL                   := 0x8
+    Win32.LB_SETTOPINDEX                := 0x197
+    Win32.LB_GETCURSEL                  := 0x188
+    Win32.LB_SETSEL                     := 0x185

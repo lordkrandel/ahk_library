@@ -7,10 +7,17 @@ Class Win32 {
         #include <lib_WIN32_types>
     }
 
-    __call(aname, params*){
+    __call(aname, byRef params*){
+        if ( isfunc( Win32[aname]) ){
+            return Win32[aname].(this, params*)
+        }
+
         callParams := []
         for k, v in params {
-            callParams.insert(Win32.functions[aname][k])
+            type := Win32.functions[aname][k]
+            callParams.insert(type)
+            
+            VarSetCapacity(params[k], Win32.getSize(type), 0)
             callParams.insert(params[k])
         }
         v := Win32.functions[aname][k+1]
@@ -20,9 +27,8 @@ Class Win32 {
         return DllCall(aname, callParams*)
     }
 
-    ; get the type size
-    getSize(type){
-        return Win32.typesLength[type.toLower()]
+    getLen(type){
+        return Win32.types[type].size
     }
 
     ; for chained numputs

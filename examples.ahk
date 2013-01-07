@@ -5,6 +5,47 @@
 #include <lib_SOCKET>
 Core.init()
 
+test(name, o, ret="Int"){
+
+    for k,v in Win32.functions[name] {
+        count   := A_index
+        type%k% := v
+        arg%k%  := o[k]
+    }
+
+    if (count == 0) {
+        DllCall(name)
+    } else if (count == 1) {
+        DllCall(name, type1, arg1, ret)
+    } else if (count == 2) {
+        DllCall(name, type1, arg1, type2, arg2, ret)
+    } else if (count == 3) {
+        DllCall(name, type1, arg1, type2, arg2, type3, arg3, ret )
+    } else if (count == 4) {
+        DllCall(name, type1, arg1, type2, arg2, type3, arg3, type4, arg4, ret )
+    } else if (count == 5) {
+        DllCall(name, type1, arg1, type2, arg2, type3, arg3, type4, arg4, type5, arg5, ret )
+    } else if (count == 6) {
+        DllCall(name, type1, arg1, type2, arg2, type3, arg3, type4, arg4, type5, arg5, type6, arg6, ret )
+    } else if (count == 7) {
+        DllCall(name, type1, arg1, type2, arg2, type3, arg3, type4, arg4, type5, arg5, type6, arg6, type7, arg7, ret )
+    } else if (count >= 8) {
+        DllCall(name, type1, arg1, type2, arg2, type3, arg3, type4, arg4, type5, arg5, type6, arg6, type7, arg7, type8, arg8, ret )
+    }
+
+    Loop, %count%
+    {
+        o[count] := arg%a_index%
+    }
+}
+
+test("QueryPerformanceCounter", o:=[] )
+count := o[1]
+sleep 200
+
+test("QueryPerformanceCounter", o )
+count := o[1] - count
+Msgbox, % count
 
 t:= {}
 

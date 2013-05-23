@@ -36,7 +36,7 @@ class Core {
     cpu(){
         static count := 0
         t := Core.firstValid(count)
-        varsetcapacity(p, 8, 0)
+        p := Core.alloc( 8, 0 )
         Win32.QueryPerformanceCounter( &p )
         count := numget(p, 0, "Int64")
         if (t) {
@@ -45,7 +45,14 @@ class Core {
             return delta
         }
     }
+
+    ; return a variable with "n" bytes reserved
+    alloc( n, fillbyte=""){
+        v := ""
+        VarSetCapacity( v, n, fillbyte )
+        return v
+    }
 }
 
-
+Core.init()
 

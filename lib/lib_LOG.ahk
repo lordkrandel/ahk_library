@@ -1,14 +1,49 @@
 class Log {
 
-    code := { warn:  "W"
-            , info:  "I"
-            , error: "E" }
+    code := { warn:  "W" , info:  "I" , error: "E" }
 
-    write( s, kind = "info", f = "" ){
-        static file := Core.firstValid(f, file, "log\" regexreplace(A_scriptname, ".ahk", "") ".log" )
-        FormatTime, time, %A_Now%, MM/dd hh:mm:ss
-        s := time "`t" Log.code[kind] "`t" s
-        FileAppend, % s, % file
+    files := []
+    obj   := []
+
+    __new( f ){
+        this.files := f
+    }
+
+    write( in, kind = "info"){
+
+        ; Save the time informations
+        FormatTime, time, %A_Now%, yyyy/MM/dd hh:mm:ss
+
+        ; Compose the log message
+        s := "[%s] [%s] %s".fmt( time, Log.code[kind], in )
+
+        ; If there is a file, append the logstring
+        for idx, filename in this.files {
+            if (filename == "*"){
+                fileAppend, % s "`n", *
+            } else {
+                fileAppend, % s "`n", % filename
+            }
+        }
+
+        ; Also add to internal object
+        obj.insert( s )
+
+    }
+
+    ; To actually see the Stdout, add " | more " to the script's commandline
+    addStdout(){
+        this.files.insert("*")
+        return 1
+    }
+
+    addFile(f){
+        this.files.insert(f)
+        return f
+    }
+
+    clear(){
+        this.obj := {}
     }
 
     warn(s, f = ""){
@@ -19,6 +54,7 @@ class Log {
     }
     error(s, f = ""){
         Log.write(s, "error", f)
+        ExitApp
     }
 
 }

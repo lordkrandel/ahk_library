@@ -107,6 +107,8 @@ class columnlevel extends level{
                     join sys.systable
             where
                 table_name = '%val%'
+            order by
+                column_id
             ;
         )
         this.odbc.connect()
@@ -119,3 +121,4 @@ class columnlevel extends level{
         return s
     }
 }
+

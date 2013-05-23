@@ -1,38 +1,47 @@
 ; SocketAddress
 class SocketAddress {
 
-    size   := 16
+    size := 16
 
     ; constructor
     __new( host="127.0.0.1", port = 18864 ){
-
         this.host   := host
         this.port   := port
-
-        this.__port := Win32.call("Ws2_32\htons", port)
-
-        ; convert the address to ANSI
-        VarSetCapacity( hostTemp, 16 )
-        StrPut( host, &hostTemp, "cp0" )
-
-        ; use inet_addr to build the structure
-        VarSetCapacity( this.__host, 16 )
-        this.__host := Win32.call("Ws2_32\inet_addr", hostTemp)
-
+        this.__port := this.w32_htons()
+        this.__host := this.w32_inet_addr( host )
     }
 
     ; return as a struct
     getStruct(){
-        sockAddr   := 0
-        VarSetCapacity(sockAddr, this.size)
+        sockAddr := Core.alloc( this.size )
 
-        ; chained NumPuts
         Win32.put( Win32.AF_INET, "Short", &sockAddr )
         Win32.put( this.__port,   "UShort")
         Win32.put( this.__host )
 
         return sockAddr
     }
+
+    ; htons win32 wrapping
+    w32_htons(){
+        DllCall("Ws2_32\htons", port)
+        return port
+    }
+
+    ; inet_addr win32 wrapping
+    w32_inet_addr( host ) {
+
+        ; convert the address to ANSI
+        hostTemp := Core.alloc( this.size )
+        StrPut( host, &hostTemp, "cp0" )
+
+        ; use inet_addr to build the structure
+        ret := Core.alloc( this.size )
+        ret := DllCall("Ws2_32\inet_addr", hostTemp)
+
+        return ret
+    }
+
 
 }
 
@@ -46,8 +55,8 @@ class Socket {
 
         this.addr := new SocketAddress(host, port)
 
-        Varsetcapacity(data, 32)
-        Win32.call("ws2_32\WSAStartup", 2, &data )
+        data := Core.alloc( 32 )
+        DllCall("ws2_32\WSAStartup", 2, &data )
         if ( ErrorLevel || ! data ) {
             throw this.error("Cannot initialize WinSock")
         }
@@ -75,29 +84,27 @@ class Socket {
 
     ; send 
     send( data ) {
-
         ret := Win32.call("ws2_32\send", this.socket, data, 2 * ( strlen(data) + 1 ), 0 )
         if (ret < 0){
             throw this.error("Error sending data")
         }
     }
 
-    ; event
+    ; event ( should be virtual )
     event(buf){
         Msgbox, % buf
     }
 
     ; receive
-    receive(size = 8192){
+    receive(size = 8192 ){
 
-        buf := ""
         Loop,
         {
-            VarSetCapacity(buf, 8192)
-            buflen := Win32.call("Ws2_32\recv", this.socket, &buf, size, 0 )
+            buf := Core.alloc( 8192 )
+            buflen := DllCall("Ws2_32\recv", this.socket, &buf, size, 0 )
 
-            if( buflen <= 0){
-                err := Win32.call("Ws2_32\GetLastError")
+            if( buflen <= 0 ){
+                err := DllCall("Ws2_32\GetLastError")
 
 ;               ONLY FOR NON-BLOCKING
 ;               if ( err == Win32.WSA_WOULDBLOCK ){
@@ -122,7 +129,8 @@ class Socket {
 
     ; close
     close(){
-        if ( ! ( ret := Win32.call("ws2_32\closesocket", this.handle) ) ){
+        ret := DllCall("ws2_32\closesocket", this.handle)
+        if (!ret){
             throw this.error("Cannot close socket!")
         }
     }
@@ -133,29 +141,27 @@ class Socket {
     }
 
     ; getlasterror
-    getLastError( size=8192){
-        err := Win32.call("Ws2_32\WSAGetLastError")
+    getLastError( size=8192 ){
+        err := DllCall("Ws2_32\WSAGetLastError")
         if (!err){
-            return
+            return err
         }
-        VarSetCapacity(txt, size, 32)
-        ret := Win32.call("FormatMessage", Win32.FORMAT_MESSAGE_FROM_SYSTEM, 0, err, Win32.LANG_USER_DEFAULT, &txt, size, 0 )
+        txt := Core.alloc( size, 32 )
+        ret := DllCall("FormatMessage", Win32.FORMAT_MESSAGE_FROM_SYSTEM, 0, err, Win32.LANG_USER_DEFAULT, &txt, size, 0 )
         return ( ret >= 0 ? err ", " txt : err)
     }
 
     ; delete
     __delete(){
-        Win32.call("ws2_32\WSACleanup")
+        DllCall("ws2_32\WSACleanup")
     }
 
     ;set async
     setAsync( msg = 0x5000 ) {
-        ret := Win32.call("ws2_32\WSAAsyncSelect", this.socket, A_ScriptHwnd, msg, Win32.FD_READ + Win32.FD_CLOSE )
+        ret := DllCall("ws2_32\WSAAsyncSelect", this.socket, A_ScriptHwnd, msg, Win32.FD_READ + Win32.FD_CLOSE )
         if (!ret){
             throw this.error("Cannot set socket Asynchronous")
         }
-        return ret
     }
 
 }
-

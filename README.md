@@ -2,6 +2,13 @@ lordkrandel/ahk_library
 ================================
 
 
+UPDATE:
+---------------------------
+I'm realizing I'm just trying to rewrite Python, so this is really against DRY (Don't Repeat Yourself).
+Shouldn't I just build an interface?
+
+
+
 An Autohotkey_L [http://l.autohotkey.net/] stand-alone library
 
 AHK_L has Object Oriented design, but very few object are included in the core.

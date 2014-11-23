@@ -1,32 +1,56 @@
+;; Handles log operations on different channels:
+;; textfile, stdout, in-memory object
 class Log {
 
-    code := { warn:  "W" , info:  "I" , error: "E" }
-
+    code  := { warn:  "W" , info:  "I" , error: "E", debug: "D" }
     files := []
     obj   := []
 
-    __new( f ){
-        this.files := f
+    ;; Constructor
+    ;; 20141123 now also works as a variadic constructor
+    ;; example: new Log("file1.log", "file2.log")
+    ;; old:     new Log(["file1.log", "file2.log"])
+    __new( a_files* ){
+
+        if isobject(a_files){
+            this.files := a_files
+        } else {
+            this.files := [ a_files* ]
+        }
+
     }
 
+    ;; Write the passed string through all registered channels
     write( in, kind = "info"){
 
         ; Save the time informations
         FormatTime, time, %A_Now%, yyyy/MM/dd hh:mm:ss
 
+        ; New start/stop indicator
+        if (kind == "start") {
+            l_pad := ">>"
+            kind := "debug"
+        } else if (kind == "stop") {
+            l_pad := "<<"
+            kind := "debug"
+        } else {
+            l_pad := "  "
+        }
+
         ; Compose the log message
-        s := "[%s] [%s] %s".fmt( time, Log.code[kind], in )
+        ; 20141123 Added a small padding
+        s := "%s  %s  %s%s".fmt( time, Log.code[kind], l_pad, in )
 
         ; If there is a file, append the logstring
         for idx, filename in this.files {
             if (filename == "*"){
-                fileAppend, % s "`n", *
+                fileAppend, % s "`n", *, UTF-8
             } else {
-                fileAppend, % s "`n", % filename
+                fileAppend, % s "`n", % filename, UTF-8
             }
         }
 
-        ; Also add to internal object
+        ; Also add to in-memory object
         obj.insert( s )
 
     }
@@ -56,6 +80,20 @@ class Log {
         Log.write(s, "error", f)
         ExitApp
     }
+    ; 20141123 new debug tag
+    debug(s, f = ""){
+        Log.write(s, "debug", f)
+    }
 
+    ; 20141123 New start indicator, to show in the log where the application starts
+    start(f = ""){
+        Log.write(s, "start", f)
+    }
+
+    ; 20141123 New stop indicator, to show in the log where the application ends
+    stop(f = ""){
+        Log.write(s, "stop", f)
+    }
+    
 }
 

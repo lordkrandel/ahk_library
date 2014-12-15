@@ -1,0 +1,20 @@
+{
+    "7zip": "p:\\build\\Build68_PB11\\Tools\\7zip\\7zip\\7z.exe",
+    "db_ext": {
+        "1": "log",
+        "2": "dbs",
+        "3": "db"
+    },
+    "archive_ext": {
+        "1": "zip",
+        "2": "rar",
+        "3": "7z"
+    },
+    "source": "d:\\progetti\\database",
+    "source_com": "d:\\progetti\\database\\_comunicazioni\\comunicazioni.db",
+    "source_sem": "d:\\progetti\\database\\_semaforo\\semaforo.db",
+    "source_gul": "gulliver.db",
+    "config"    : "config\\%s.json",
+    "logfile"   : "fetchDB.log",
+    "settings_asa": "fetchDB_asa%s.json"
+}

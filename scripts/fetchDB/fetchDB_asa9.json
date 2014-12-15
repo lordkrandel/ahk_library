@@ -1,0 +1,6 @@
+{
+    "db_exe": "c:\\Program Files (x86)\\Sybase\\SQL Anywhere 9\\win32\\dbsrv9.exe",
+    "db_params": "c 512M -ca 0 -gt 2 -m -x TCPIP(PORT=9009)",
+    "db_runstring": "%s %s -n %s %s -n gulliver -m %s -n comunicazioni -m %s -n semaforo",
+    "db_servername": "dbpg"
+}

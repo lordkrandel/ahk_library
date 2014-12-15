@@ -3,17 +3,21 @@
 
 :?*:dba.::
 !Space::
-
-    Core.init()
-    ac.controller.lastHwnd  := WinExist("A")
-
-    if (!ac){
-        ac := new Autocomplete()
+    ; Escludi Powerbuilder_treeview
+    ControlGetFocus, l_output, A
+    if (instr(l_output, "PBTreeView32") == 1) {
+        return
     }
-
+    if !(ac) {
+        ac := new AutoComplete()
+    }
+    ac.controller.lastHwnd := WinActive("A")
     ac.controller.setHotkey(A_thishotkey)
     ac.show()
+return
 
+:?*:dba,::
+    Send dba.
 return
 
 class autoComplete extends g {  ; ________________________
@@ -28,6 +32,7 @@ class autoComplete extends g {  ; ________________________
                          , "Capslock" : "capslockSlot"
                          , "+Enter"   : "enterSlot"
                          , "Enter"    : "enterSlot"
+                         , "NumPadEnter" : "enterSlot"
                          , ","        : "enterSlot"
                          , "+,"       : "enterSlot"
                          , "Up"       : "arrowSlot"
@@ -44,37 +49,37 @@ class autoComplete extends g {  ; ________________________
     controller := new acController(this)
 
     __new(){
-
-        g := this.name
-
-        Gui, %g%: +Resize 
-        Gui, %g%: Font, s10, Verdana
-        Gui, %g%: Add, edit,    x0 y0  w300 h20 hwndhwndedit    gEventDispatcher
-        Gui, %g%: Add, listbox, x0 y20          hwndhwndlistbox Choose0 0x100 Multi +0x1000
-
+        l_name := this.name
+        Gui, %l_name%: +Resize 
+        Gui, %l_name%: Font, s10, Verdana
+        Gui, %l_name%: Add, edit,    x0 y0  w300 h20 hwndhwndedit    gEventDispatcher
+        Gui, %l_name%: Add, listbox, x0 y20          hwndhwndlistbox Choose0 0x100 Multi +0x1000
         this.hwnd     := winhwnd
         this.listbox  := new Listbox(hwndlistbox)
         this.win.edit := hwndedit
-
     }
 
     show(){
         base.show()
-        this.entries := ( this.controller.firstRun
+        this.entries := (this.controller.firstRun
             ? this.controller.start()
-            : this.controller.getEntries( this.controller.currentLevel ) )
-        this.populate( this.entries )
+            : this.controller.getEntries(this.controller.currentLevel))
+        this.populate(this.entries)
     }
 
+    close(){
+        this.hide()
+    }
+    
     populate(entries) {
-        if ( ! entries ) {
+        if !(entries) {
             return
         }
         this.entries := entries
-        this.controlSet( this.listbox.hwnd, "", Entries )
+        this.controlSet(this.listbox.hwnd, "", Entries)
 
         val := this.controller.getCurrentLevel().value
-        this.controlSet( this.win.edit, "", "" )
+        this.controlSet(this.win.edit, "", "")
         Gui, % this.name ": Show",, % this.controller.getTitle()
         this.listbox.deselectAll()
 
@@ -87,8 +92,8 @@ class autoComplete extends g {  ; ________________________
             this.listbox.choose(0)
         }
         controlfocus,, % "ahk_id " this.win.edit
-
     }
+
     size(){
         bl := A_BatchLines
         SetBatchLines, 1000
@@ -97,16 +102,16 @@ class autoComplete extends g {  ; ________________________
         SetBatchLines, %bl%
     }
 
-    tabslot(){
+    tabSlot(){
         s := this.controlGet( this.listbox.hwnd )
         if (instr(s,"|")){
             throw "Select only one."
         }
-        this.populate( this.controller.changeLevel(1, s) )
+        this.populate( this.controller.nextLevel(s) )
     }
 
     capslockSlot(){
-        this.populate( this.controller.changeLevel(-1) )
+        this.populate( this.controller.prevLevel() )
     }
 
     arrowSlot(){
@@ -121,21 +126,14 @@ class autoComplete extends g {  ; ________________________
 
     odbcConfig(){
         if (this.controller.currentLevel == 0){
-            dsn := this.listbox.get()
+            dsn := this.listbox.getValue()
             d := new optionsDialog(dsn)
             d.show()
         }
     }
 
-    deselectAll(){
-        this.listbox.deselectAll()
-    }
-    selectAll(){
-        this.listbox.selectAll()
-    }
-
     enterSlot(){
-
+        global ac 
         this.hide()
 
         ; Fastest
@@ -145,13 +143,23 @@ class autoComplete extends g {  ; ________________________
         ; Get all the selected fields
         s := this.controlGet( this.listbox.hwnd )
         s := this.controller.build(s)
-
-        WinActivate, this.controller.lastHwnd
-
-        SendInput, % s
+        
+        l_id := ac.controller.lastHwnd
+        WinActivate, % "ahk_id " l_id
+        WinWaitActive, % "ahk_id " l_id, , 2
+        
+        ; Paste text to the control
+        Clipboard.ensurePaste(s)
 
         ; Get back to normal speed
         setbatchlines, % batchlines
+    }
+
+    deselectAll(){
+        this.listbox.deselectAll()
+    }
+    selectAll(){
+        this.listbox.selectAll()
     }
 
     filter() {
@@ -174,13 +182,9 @@ class autoComplete extends g {  ; ________________________
         }
 
         entries := top entries
-        entries := Core.firstValid( entries, "|" )
+        entries := entries.or("|")
 
         this.listbox.set( entries )
         this.listbox.choose(0)
     }
-
 }
-
-return
-

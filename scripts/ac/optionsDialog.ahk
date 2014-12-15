@@ -11,27 +11,30 @@ class optionsDialog extends g {
                            , button3 : "save"   } }
 
     save(){
+        try {
+            o := { uid : this.uidedit
+                 , pwd : this.pwdedit
+                 , dsn : this.defaultcheck }
 
-        o := { uid : this.uidedit
-             , pwd : this.pwdedit
-             , dsn : this.defaultcheck }
+            uid        := this.controlGet(this.uidedit)
+            pwd        := this.controlGet(this.pwdedit)
+            defaultDsn := this.controlGet(this.defaultcheck) ? this.dsn : "None"
 
-        uid        := this.controlGet(this.uidedit)
-        pwd        := this.controlGet(this.pwdedit)
-        defaultDsn := this.controlGet(this.defaultcheck) ? this.dsn : ""
-
-        OdbcReg.save( this.dsn, uid, pwd, defaultDsn )
-        base.close()
-
+            OdbcReg.saveDsn( new OdbcSettings(this.dsn, uid, pwd, "dba"), defaultDsn )
+            base.close()
+        } catch l_exc {
+            Msgbox, % "Cannot save " this.dsn ", error: " l_exc.message
+        }
     }
 
     show(){
         base.show()
+        OdbcReg.load()
         data := OdbcReg.loadDsn(this.dsn)
         for k, v in { dsn : "dsnedit", uid: "uidedit", pwd: "pwdedit" } {
             this.controlSet( this[v], "", data[k] )
         }
-        if (OdbcReg.default.dsn == this.dsn) {
+        if (OdbcReg.defaultDsn == this.dsn) {
             Control, Check,,, % "ahk_id " this.defaultcheck
         }
         ControlFocus,, % "ahk_id " this.uidedit
@@ -40,7 +43,6 @@ class optionsDialog extends g {
     __new( dsn ) {
 
         g := this.name
-
         this.dsn := dsn
 
         Gui, %g%: +hwndwinhwnd

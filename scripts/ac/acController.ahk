@@ -1,8 +1,6 @@
-#include <lib_odbc>
 #include %A_ScriptDir%\scripts\ac\levels.ahk
 
 class acController {
-
 
     odbc         := new ODBC()
     firstRun     := 1
@@ -19,21 +17,16 @@ class acController {
     __new(win){
         this.win := win
     }
-
+        
     setHotkey(htk){
-
         norm  := this.hotkeys.normal
         own   := this.hotkeys.owner
-
         this.setPrefix := 0
-
         if ( htk == own ) {
             this.setPrefix := 1
-            this.currentLevel := Math.min( this.currentLevel, 2)
+            this.currentLevel := [this.currentLevel, 2].min()
         }
-
         this.hotkeys.current := htk
-
     }
 
     getCurrentLevel() {
@@ -41,11 +34,10 @@ class acController {
     }
 
     start(){
-        try {
-            while ( d := this.getCurrentLevel().getDefault() ) {
-                entries := this.changeLevel(1, d)
-            }
-        } catch e {
+        l_default := this.getCurrentLevel().getDefault()
+        if ( l_default ) {
+            entries := this.changeLevel(1, l_default)
+        } else {
             this.currentLevel := 0
             entries := this.getEntries()
         }
@@ -57,25 +49,37 @@ class acController {
         return this.getCurrentLevel().name
     }
 
-    changeLevel( n = 1, s = "") {
-        if ( abs(n) <> 1 || ! Math.between( 0, this.currentLevel + n, this.levels.maxindex() ) ) {
+    
+    nextLevel(a_value){
+        return this.changeLevel(1, a_value)
+    }
+    prevLevel(){
+        return this.changeLevel(-1)
+    }
+    changeLevel( a_offset = 1, a_value = "") {
+
+        l_next_level := this.currentLevel + a_offset
+
+        if ( abs(a_offset) <> 1 )
             return
-        }
+        if !l_next_level.between(0, this.levels.maxindex())
+            return
+
         try {
-            if (s){
-                this.levels[this.currentLevel].value := s
-            }
-            this.currentLevel += n
-            entries := this.getEntries(this.currentLevel)
-        } catch e {
-            throw e
+            this.levels[this.currentLevel].value := a_value
+            l_entries := this.getEntries(l_next_level)
+            this.currentLevel := l_next_level
+            return l_entries
+        } catch l_exc {
+            msgbox, % l_exc.message
         }
-        return entries
+        
     }
 
-    getEntries( n = 0 ){
-        val := ( n > 0 ? this.levels[n-1].value : "" )
-        return this.levels[n].getEntries(val)
+    getEntries(n=0){
+        val := (n > 0 ? this.levels[n-1].value : "")
+        l_entries := this.levels[n].getEntries(val)
+        return l_entries
     }
 
     getPrefix(){

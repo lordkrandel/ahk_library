@@ -1,124 +1,155 @@
-#include <lib_odbc>
-
-class level {
-    odbc := ""
-    __new(odbc){
-
-        this.odbc := odbc
+;; GUI Iteration base class
+class Level {
+    
+    ;; constructor over existing ODBC class
+    __new(a_odbc){
+        this.odbc := a_odbc
     }
+
+    ;; virtual method
     getDefault(){
-        return 0
     }
+
+    ;; virtual method
+    getEntries(a_value=""){
+    }
+
 }
 
-class dsnlevel extends level{
+;; DSN SELECTion GUI Iteration
+class DsnLevel extends Level{
     name := "DSN"
 
-    getEntries( val = ""){
-        return % "|" "|".join( OdbcReg.dsnList )
+    ;; Get DSN entries FROM the registry
+    getEntries( a_value="" ){
+        l_ret := "|" OdbcReg.dsnList.join("|")
+        return l_ret
     }
 
+    ;; Read the default FROM the registry
     getDefault(){
         return OdbcReg.default.dsn
     }
 
 }
 
-class ownerlevel extends level{
+;; Table owner SELECTion GUI Iteration
+class OwnerLevel extends Level{
     name := "Owner"
+
+    ;; Return the default owner FROM the registry
     getDefault(){
         return OdbcReg.default.owner
     }
 
-    getEntries( val ){
+    ;; Return the table owners' list
+    getEntries(a_value=""){
 
-        try {
+        ; Read the settings FROM the registry
+        this.odbc.settings := OdbcReg.loadDsn(a_value)
 
-            this.odbc.settings := OdbcReg.loadDsn(val)
-            this.odbc.connect()
+        ; Connect or fail
+        this.odbc.connect()
 
-        } catch e {
-            throw e
-        }
-
-        q =
+        ; Retrieve table owners
+        ls_query =
         (
-            select distinct
+            SELECT distinct
                creator
-            from
-               sys.syscatalog
-            order by
+            FROM
+               SYS.SYScatalog
+            ORDER BY
                creator
             ;
         )
-        query := new Query( this.odbc.conn, q )
-        s := ""
+        l_query := new Query( this.odbc.conn, ls_query ).do()
+
+        ; Loop over results and compose the string
         loop {
-            s := s "|" query.rs.fields.item("creator").value
-            query.rs.movenext()
-        } until (query.rs.EOF)
-        return s
+            l_ret := l_ret "|" l_query.rs.fields.item("creator").value
+            l_query.rs.movenext()
+        } until (l_query.rs.EOF)
+
+        return l_ret
+
     }
 }
 
-class tablelevel extends level{ 
-
+;; Table level GUI Iteration
+class TableLevel extends Level { 
     name := "Tables"
 
-    getEntries(val){
+    ;; Retrieve all the tables of the owner
+    getEntries(a_value=""){
+    
+        ; Transform to uppercase
+        l_value := a_value.toUpper()
 
-        val := val.toUpper()
-        q =
+        ; Connect to the source
+        this.odbc.connect()
+
+        ; Retrieve all the tables
+        ls_query =
         (
-            select
+            SELECT
                creator,
                tname
-            from
-               sys.syscatalog
-            where
-               upper(creator) = '%val%'
-            order by
+            FROM
+               SYS.SYScatalog
+            WHERE
+               upper(creator) = '%l_value%'
+            ORDER BY
                creator,
                tname
             ;
         )
-        this.odbc.connect()
-        query := new Query(this.odbc.conn, q )
-        s := ""
+        l_query := new Query(this.odbc.conn, ls_query ).do()
+
+        ; Loop over results and compose the string
         loop {
-            s := s "|" query.rs.fields.item("tname").value
-            query.rs.movenext()
-        } until (query.rs.EOF)
-        return s
+            l_ret := l_ret "|" l_query.rs.fields.item("tname").value
+            l_query.rs.movenext()
+        } until (l_query.rs.EOF)
+
+        return l_ret
 
     }
 }
 
-class columnlevel extends level{
+;; Table Columns level GUI Iteration
+class ColumnLevel extends Level {
     name := "Columns"
 
-    getEntries( val ){
-        q =
+    ;; Retrieve all columns FROM a given table
+    getEntries(a_value=""){
+
+        ; Try to connect
+        this.odbc.connect()
+
+        ; Compose the query string
+        ls_query =
         (
-            select
+            SELECT
                 column_name
-            from
-                 sys.syscolumn
-                    join sys.systable
-            where
-                table_name = '%val%'
-            order by
+            FROM
+                 SYS.SYScolumn
+                    join SYS.SYStable
+            WHERE
+                table_name = '%a_value%'
+            ORDER BY 
                 column_id
             ;
         )
-        this.odbc.connect()
-        query := new Query(this.odbc.conn, q )
-        s := ""
+
+        ; Retrieve all columns
+        l_query := new Query(this.odbc.conn, ls_query ).do()
+        
+        ; Compose the result string
         loop {
-            s := s "|" query.rs.fields.item("column_name").value
-            query.rs.movenext()
-        } until (query.rs.EOF)
-        return s
+            l_ret := l_ret "|" l_query.rs.fields.item("column_name").value
+            l_query.rs.movenext()
+        } until (l_query.rs.EOF)
+
+        return l_ret
     }
 }
-

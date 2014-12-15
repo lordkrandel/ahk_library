@@ -16,6 +16,7 @@ class VarBase {
 #include <lib_CALLBACK>        ; tests
 #include <lib_ODBC>            ; test Query
 #include <lib_EVENTDISPATCHER> ; tests
+#include <lib_CLIP>            ; tests
 #include <lib_TRAYTIP>
 #include <lib_CONTROL>         ; tests
 #include <lib_LISTBOX>         ; tests

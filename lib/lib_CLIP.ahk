@@ -1,7 +1,7 @@
 #include <lib_CORE>
 
 ;; Clipboard functions
-class Clipboard {
+class Clip {
 
     ensurePaste(a_new_value){
 
@@ -27,7 +27,7 @@ class Clipboard {
         ClipWait, 2
 
         ; Paste the clipboard
-        Send, ^v
+        SendInput, ^v
 
         ; Wait some time 
         Sleep, 50

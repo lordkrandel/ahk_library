@@ -149,7 +149,7 @@ class autoComplete extends g {  ; ________________________
         WinWaitActive, % "ahk_id " l_id, , 2
         
         ; Paste text to the control
-        Clipboard.ensurePaste(s)
+        Clip.ensurePaste(s)
 
         ; Get back to normal speed
         setbatchlines, % batchlines

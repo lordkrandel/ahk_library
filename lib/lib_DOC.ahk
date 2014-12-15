@@ -1,23 +1,18 @@
 #include <lib_CORE>
 
-test(){
-    c := new Doc(A_Scriptname)
-    j := new JSONParser("json.js")
-    Msgbox, % j.stringify(c.comments)
-}
-test()
-exitApp
-
 ;; Base class for documentation objects
 class Doc_base {
-    __new(m){
-        c := m.count()
-        Loop, %c%
+
+    ;; constructor
+    ;; a_match: match object
+    __new(a_match){
+        l_count := m.count()
+        Loop, % l_count
         {
-            v := m.value(A_index)
+            v := a_match.value(A_index)
             if (v){
                 k := m.name(A_index)
-                this[k] := m.value(A_index)
+                this[k] := a_match.value(A_index)
             }
         }
     }
@@ -25,23 +20,29 @@ class Doc_base {
 
 ;; Function documentation object
 class Doc_function extends Doc_base {
+
+    ;; regex string corresponding to a function
     static regex := "iO)^\s*(?P<name>\w+)\((?P<params>[^)]*?)\)\s*{"
-    ;; Constructor
-    ;; m: match object
-    __new(m){
-        base.__new(m)
-        this.params := m.params.split(",")
+
+    ;; constructor
+    ;; a_match: match object
+    __new(a_match){
+        base.__new(a_match)
+        this.params := a_match.params.split(",")
         this.kind := "function"
     }
 }
 
 ;; Class documentation object
 class Doc_class extends Doc_base {
+
+    ;; regex string corresponding to a class
     static regex := "iO)^\s*class\s*(?P<name>\w+)(?:\s*extends\s*(?P<baseclass>\w+))?"
-    ;; Constructor
+
+    ;; constructor
     ;; m: match object
-    __new(m){
-        base.__new(m)
+    __new(a_match){
+        base.__new(a_match)
         this.kind := "class"
     }
 }
@@ -49,40 +50,40 @@ class Doc_class extends Doc_base {
 ;; The markdown has then to be put into HTML with the proper tool
 class Doc {
 
-    ;; Constructor
-    ;; f: filename to be parsed
-    __new(f){
+    ;; constructor
+    ;; a_filename: name of the file to be parsed
+    __new(a_filename){
 
         this.comments := {}
 
-        Loop, read, %f%
+        Loop, read, % a_filename
         {
 
             ;; Look for comments
-            if ( RegexMatch(a_loopreadline, "iO)^(?P<indent>\s*;;\s?).*?$", m)){
-                c := Core.firstValid(c, {})
-                c.insert( a_loopreadline.leftTrim( strlen(m.indent) ) )
+            if ( RegexMatch(a_loopreadline, "iO)^(?P<indent>\s*;;\s?).*?$", l_match)){
+                l_comment := l_comment.or({})
+                l_comment.insert( a_loopreadline.leftTrim( strlen(l_match.indent) ) )
                 continue
-            } else if (!c) {
+            } else if !(l_comment) {
                 ; Not found, keep going
                 continue
             }
 
             ;; The comment refers to the context which follows it
-            this.comments.insert({context: a_loopreadline, comments: c})
-            c := ""
+            this.comments.insert({context: a_loopreadline, comments: l_comment})
+            l_comment := ""
 
         }
 
-        ;; Try to build a Doc_class for every comment found
-        for k,v in this.comments {
-            for k2, class in [ Doc_class, Doc_function] {
-                if RegExMatch( v.context, class.regex, m){
-                    v.doc := new class(m)
+        ;; For each comment try to build a Doc_class
+        this.doc_objects := {}
+        for k, v in this.comments {
+            for k2, l_class in [ Doc_class, Doc_function] {
+                if RegExMatch( v.context, l_class.regex, l_match){
+                    this.doc_objects.insert( new Doc_class(l_match) )
                 }
             }
         }
-
     }
 
 }

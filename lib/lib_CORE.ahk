@@ -1,37 +1,45 @@
-#include <lib_STRING>
-#include <lib_MATH>
-#include <lib_OBJ>
-#include <lib_CALLBACK>
-#include <lib_FILE>
-#include <lib_JSON>
-#include <lib_LOG>
-#include <lib_TRAYTIP>
-#include <lib_WIN32>
-#include <lib_ODBC>
-#include <lib_SOCKET>
-#include <lib_EVENTDISPATCHER>
-#include <lib_WINDOW>
-#include <lib_G>
-#include <lib_CONTROL>
-#include <lib_LISTBOX>
 
-; Universal basic functions that should be accessible anywhere
+;; Base class for all variables
+class VarBase {
+}
+
+; Assign VarBase as a base class for all variables
+"".base.base := VarBase
+
+; includes
+#include <lib_STRING> 
+#include <lib_OBJ>
+#include <lib_FILE>            ; tests
+#include <lib_MATH>            ; tests
+#include <lib_LOG>             ; tests
+#include <lib_WINDOW>          ; tests
+#include <lib_CALLBACK>        ; tests
+#include <lib_ODBC>            ; test Query
+#include <lib_EVENTDISPATCHER> ; tests
+#include <lib_TRAYTIP>
+#include <lib_CONTROL>         ; tests
+#include <lib_LISTBOX>         ; tests
+#include <lib_SOCKET>          ; tests
+#include <lib_WIN32>           ; tests
+#include <lib_G>               ; tests
+#include <lib_G_SINGLESELECT>  ; tests
+#include <lib_CONTROL>         ; tests
+#include <lib_JSON>
+;#include <lib_TEST>
+
+;; Universal basic functions that should be accessible anywhere
 class Core {
 
-    init(){
-        String := new String()
-        Win32  := new Win32()
-    }
-
-    ; Returns the first non null/zero element in the arguments
-    firstValid( a* ){
-        for k,v in a {
-            if (v){
-                return v
-            }
+    ; Returns the range array
+    range(min, max, step=1){
+        arr := []
+        while (min <= max) {
+            arr.insert(min)
+            min := min + step
         }
+        return arr
     }
-
+    
     ; Timer function. First call starts, second call stops and returns the delta
     cpu(){
         static count := 0
@@ -52,7 +60,34 @@ class Core {
         VarSetCapacity( v, n, fillbyte )
         return v
     }
-}
 
-Core.init()
+    ; Merge all methods and properties from source classes to destination class
+    mixin(a_dest, a_parms*){
+        return Core.merge(a_dest.base.base, a_parms*)
+    }
+
+    ; Merge all methods and properties from source objects to destination object
+    merge(a_dest, a_parms*){
+        for _, l_source in a_parms {
+            for k, v in l_source {
+                if (k == "__Class"){
+                    continue
+                }
+                a_dest[k] := v
+            }
+
+        }
+        return a_dest
+    }
+    
+    toggleMaxSpeed(){
+        static backup := ""
+        if (A_BatchLines == -1){
+            setbatchlines, % backup
+        } else {
+            backup := A_BatchLines
+            setbatchlines, % -1
+        }
+    }
+}
 

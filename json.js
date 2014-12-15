@@ -187,6 +187,7 @@ if (!JSON) {
                 : null;
         };
 
+
         String.prototype.toJSON      =
             Number.prototype.toJSON  =
             Boolean.prototype.toJSON = function (key) {
@@ -267,6 +268,7 @@ if (!JSON) {
 
         case 'boolean':
         case 'null':
+        case 'date':
 
 // If the value is a boolean or null, convert it to a string. Note:
 // typeof null does not produce 'null'. The case is included here in
@@ -358,7 +360,7 @@ if (!JSON) {
 // If the JSON object does not yet have a stringify method, give it one.
 
     if (typeof JSON.stringify !== 'function') {
-        JSON.stringify = function (value, replacer, space) {
+        JSON.stringify = function (value, space, replacer) {
 
 // The stringify method takes a value and an optional replacer, and an optional
 // space parameter, and returns a JSON text. The replacer can be a function
@@ -373,6 +375,7 @@ if (!JSON) {
 // If the space parameter is a number, make an indent string containing that
 // many spaces.
 
+            if (!space) { space = 4; }
             if (typeof space === 'number') {
                 for (i = 0; i < space; i += 1) {
                     indent += ' ';
@@ -472,7 +475,8 @@ if (!JSON) {
 
                 j = eval('(' + text + ')');
 
-                j.toString      = function() { return '1'; } ;
+                j.stringify  = function(space, replace) { return JSON.stringify( this, space, replace); } ;
+
 // In the optional fourth stage, we recursively walk the new structure, passing
 // each name/value pair to a reviver function for possible transformation.
 
@@ -487,4 +491,24 @@ if (!JSON) {
         };
     }
 }());
+
+
+Object.prototype.getProperties = function(){
+    var keys = [];
+    for(var key in this){
+        if (this.hasOwnProperty(key) && (typeof this[key] !== 'function')) {
+           keys.push(key);
+        }
+    }
+    return keys;
+}
+
+Object.prototype.set = function(name, value){
+    return this[name] = value;
+}
+Object.prototype.get = function(name){
+    return this[name];
+}
+
+
 

@@ -1,84 +1,45 @@
-; Provides common arithmetic, logic and algebric functions.
-class Math {
+;; Provides common arithmetic, logic and algebric functions for all string variables
+class StringMathMixin {
 
-
-    ; Function Xor
-    xor(a, b) {
-        return !!a && !b || !!b && !a
+    ;; Function Xor
+    xor(a_arg) {
+        return !!this && !a_arg || !!a_arg && !this
     }
-    min(x,y = "") {
-        if y is not number
-        {
-            if (y == ""){
-                return Math.minObj(x)
-            }
-        }
-        return x > y ? y : x
-    }
-    max(x,y = "") {
-        if y is not number
-        {
-            if (y == ""){
-                return Math.maxObj(x)
-            }
-        }
-        return x > y ? x : y
-    }
-    minObj(x) {
-        if (!isObject(x)){
-            return
-        }
-        c := 0
-        d := 0
-        for k, v in x {
-            if ( !d ){
-                c := v
-                d := 1
-            } else {
-                c := Math.min( c, v )
-            }
-        }
-        return c
-    }
-    maxObj(x) {
-        if (!isObject(x)){
-            return
-        }
-        c := 0
-        d := 0
-        for k, v in x {
-            if ( !d ) {
-                c := v
-                d := 1
-            } else {
-                c := Math.max( c, v )
-            }
-        }
-        return c
-    }
-    between(x,y,z) {
-        return ( x <= y && y <= z )
+ 
+    ;; Test current value between two values
+    between(a_1, a_2) {
+        return ( a_1 <= this && this <= a_2 )
     }
 
-    changeBase(n, b = 10) {
-        if (b > 16){
+    ;; Change the base
+    changeBase(a_base = 10) {
+        if (a_base > 16){
             throw "Cannot changeBase with base > 16"
         }
-        s := ""
-        while n {
-            s := % SubStr("0123456789ABCDEF",  mod(n,b)+1, 1) s
-            n := n // b
+        l_n := this
+        while l_n {
+            l_ret := % SubStr("0123456789ABCDEF", mod(l_n, a_base) + 1, 1) l_ret
+            l_n := l_n // a_base
         }
-        return s
+        return "0x" l_ret
     }
-    hex(n) {
-        return % Math.changeBase(n,16)
+
+    ;; Convert to hex
+    hex() {
+        return % this.changeBase(16)
     }
-    oct(n) {
-        return % Math.changeBase(n,8)
+
+    ;; Convert to octal
+    oct() {
+        return % this.changeBase(8)
     }
-    fromHex(n) {
-        m := % "0x" n
-        return % m + 0
+
+    ;; Convert from hex
+    fromHex() {
+        l_ret := % "0x" this
+        return % l_ret + 0
     }
+
 }
+
+Core.mixin(VarBase, StringMathMixin)

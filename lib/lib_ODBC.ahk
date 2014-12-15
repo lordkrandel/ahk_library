@@ -1,159 +1,229 @@
-class Query {
-    query := ""
-    conn  := ""
-    rs    := ""
+#include <LIB_CORE>
 
-    __new(conn, text){
-        this.conn := conn
-        try {
-            this.do(text)
-        } catch e {
-            return ""
-        }
+;; ODBC Settings data structure class
+class OdbcSettings {
+
+    ;; Constructor
+    __new(a_dsn, a_uid, a_pwd, a_owner=""){
+        this.dsn   := a_dsn
+        this.uid   := a_uid
+        this.pwd   := a_pwd      
+        this.owner := a_owner
     }
+
+    ;; Get all members
+    get(byref a_dsn, byref a_uid, byref a_pwd, byref a_owner=""){
+        a_dsn   := this.dsn
+        a_uid   := this.uid
+        a_pwd   := this.pwd
+        a_owner := this.owner
+    }
+
+    ;; Builds the connectString
+    connstring(){
+        return "dsn=%s;uid=%s;pwd=%s;".fmt(this.dsn, this.uid, this.pwd)    
+    }
+
+}
+
+;; Models a single SQL query
+class Query {
+
+    ;; Constructor
+    __new(a_conn, a_sql){
+        this.conn := a_conn
+        this.sql  := a_sql
+    }
+
+    ;; Destructor
     __delete(){
         if (this.rs && this.rs.state != 0){
             this.rs.close()
         }
     }
 
-    do(q){
-        this.query := q
-
-        this.rs := ComObjCreate("ADODB.Recordset")
-        this.rs.ActiveConnection := this.conn
-        this.rs.Source := q
-        this.rs.open()
-        this.rs.moveFirst()
-        return this.rs
+    ;; Execute the current query
+    do(){
+        try {
+            this.rs := ComObjCreate("ADODB.Recordset")
+            this.rs.ActiveConnection := this.conn
+            this.rs.Source := this.sql
+            this.rs.open()
+            this.rs.moveFirst()
+            return this
+        } catch l_ex {
+            throw Exception("Query failed: " l_ex.message)
+        }
     }
 
 }
 
+
+;; Models an ODBC connection
 class ODBC {
 
-    settings  := ""
-    conn      := ""
-    connected := 0
-
-    __new( settings = "" ){
-        if (settings){
-            this.settings := settings 
+    ;; Constructor
+    __new( a_settings="" ){
+        if (a_settings){
+            this.settings := a_settings
         } else {
-            this.loadFromRegistry()
+            this.settings := OdbcReg.load()
         }
     }
 
+    ;; Destructor
     __delete(){
+        this.reset()
+    }
+
+    ;; Close the connection and reset the object
+    reset(){
         this.conn.close()
         this.conn := ""
         this.connected := 0
     }
 
-
+    ;; Start a new connection
     connect(){
-
+    
         try {
-            if (this.connected){
-                this.conn.close()
-                this.conn := ""
-                this.connected := 0
-            }
+            if (this.connected)
+                this.reset()
 
             this.conn := ComObjCreate("ADODB.Connection")
-
-            s := this.settings
-            this.conn.ConnectionString := "dsn=" s.dsn ";uid=" s.uid ";pwd=" s.pwd ";"
-
+            this.conn.ConnectionString := this.settings.connstring()
             this.conn.Open()
-
             this.connected := 1
-        } catch e {
-            throw e
-        }
-    }
 
-    loadFromRegistry(){
-        this.settings := Core.firstValid( OdbcReg.load() )
-        return this.settings
+        } catch l_exc {
+            l_msg := "Cannot connect to database`n`n" "Connstring: `n%s`n`n" "Error:`n%s"
+            l_msg := l_msg.fmt( this.settings.connstring(), l_exc.message) 
+            throw Exception(l_msg)
+        }
     }
 
 }
 
-
+;; Utility class to retrieve or store ODBC information inside the registry 
 class OdbcReg {
 
-    static baseKey := "HKEY_LOCAL_MACHINE"
-    static subKey  := "SOFTWARE\ODBC\ODBC.INI\"
-    static default := { dsn: "", owner: "" }
-    static dsnList := ""
+    static baseKey    := "HKEY_LOCAL_MACHINE"
+    static subKey     := "SOFTWARE\ODBC\ODBC.INI\"
+    static sourcesKey := "ODBC Data Sources"
+    static dsnList    := ""
 
-    loadDsn(dsn){
-        RegRead, uid, % OdbcReg.baseKey, % OdbcReg.subkey dsn, UID
-        RegRead, pwd, % OdbcReg.baseKey, % OdbcReg.subkey dsn, PWD
-        return { dsn: dsn, uid: uid, pwd: pwd }
+    ;; Load settings from a specific DSN
+    loadDsn(a_dsn){
+        l_dsn_key := OdbcReg.subkey 
+        try{
+            l_uid := OdbcReg.read(a_dsn, "UID")
+            l_pwd := OdbcReg.read(a_dsn, "PWD")
+        } catch l_exc {
+            throw Exception("Cannot read DSN key " a_dsn " from the registry")
+        }
+        
+        try {
+            l_owner := OdbcReg.read(a_dsn, "owner")
+        } catch l_exc {
+            ; do nothing, no owner
+        }
+        return new OdbcSettings(a_dsn, l_uid, l_pwd, l_owner)
     }
 
+    ;; Read from the ODBC keys of the registry
+    ;; read(a_valuename)
+    ;; read(a_subkey, a_valuename)        
+    read( a_1, a_2="" ){
+        l_valuename := (a_2 ? a_2 : a_1)
+        l_subkey    := (a_2 ? a_1 : "")
+
+        ; actually read from the registry
+        regread, l_ret, % OdbcReg.basekey, % OdbcReg.subkey l_subkey, % l_valuename
+        return l_ret
+    }
+
+    ;; Write to the ODBC keys of the registry
+    ;; write(a_valuename, a_value)
+    ;; write(a_subkey, a_valuename, a_value)        
+    write( a_1, a_2, a_3="" ){
+        l_value     := (a_3 ? a_3 : a_2)
+        l_valuename := (a_3 ? a_2 : a_1)
+        l_subkey    := (a_3 ? a_1 : "")
+        
+        ; actually write to the registry
+        RegWrite, REG_SZ, % OdbcReg.basekey, % OdbcReg.subkey l_subkey, % l_valuename, % l_value
+    }
+
+    ;; Load settings from the default DSN saved in the registry
     load(){
 
-        RegRead, defaultDsn,   % this.baseKey, % OdbcReg.subkey, defaultDsn
-        RegRead, defaultOwner, % this.baseKey, % OdbcReg.subkey, defaultOwner
-        OdbcReg.default.dsn   := Core.firstValid( defaultDsn   )
-        OdbcReg.default.owner := Core.firstValid( defaultOwner )
-
-        OdbcReg.loadDsnList()
-        if (defaultDsn){
-            if (Obj.in(OdbcReg.dsnList, defaultDsn)){
-                return OdbcReg.loadDsn(defaultDsn)
-            }
+        ; Read from the registry
+        l_defaultDsn :=  OdbcReg.read("dsn")
+        OdbcReg.defaultDsn := l_defaultDsn
+        
+        ; If there actually is a valid default Dsn, load the default settings
+        l_dsnlist := OdbcReg.loadDsnList()
+        if (l_defaultDsn && l_defaultDsn.in(l_dsnlist)) {
+            return OdbcReg.loadDsn(l_defaultDsn)
         }
-        return ""
+        
+        ; Not found, return nothing
+        return
     }
 
+    ;; Load the list of System DSNs from the registry
     loadDsnList(){
 
-        s := ""
-        l := {}
+        l_ret := {}
+        l_baseKey := OdbcReg.baseKey 
+        l_subKey  := OdbcReg.subKey "\" OdbcReg.sourcesKey
 
-        baseKey := OdbcReg.baseKey
-        subKey  := OdbcReg.subKey "ODBC Data Sources"
-
-        ; I use the built-in sort
-        Loop, %baseKey%, %subKey%
+        ; Get all the subkeys
+        Loop, %l_baseKey%, %l_subKey%
         {
-            s .= ( s ? "," : "") . a_loopregname
+            l_s .= ( l_s ? "," : "") A_loopregname
         }
 
-        Sort, s, CLd,
-        Loop, parse, s, CSV
+        ; Sort case-insensitive based on locale, delimiter is comma
+        Sort, l_s, CLd,
+        
+        ; Put all the entries into one array
+        Loop, parse, l_s, CSV
         {
-            l[A_index] := A_loopfield
+            l_ret[A_index] := A_loopfield
         }
 
-        OdbcReg.dsnList := l
-
-        return l
+        ; Save and return the list
+        OdbcReg.dsnList := l_ret
+        return l_ret
     }
 
-    save( dsn, uid, pwd, defaultDsn = 0, defaultOwner = 0){
+    ;; Save default dsn and owner into the registry
+    saveDsn( a_settings, a_default="", a_driver="___" ){
 
-        baseKey := OdbcReg.baseKey
-        subKey  := OdbcReg.subKey 
-        RegWrite, REG_SZ, % baseKey, % subKey dsn, UID, % uid
-        RegWrite, REG_SZ, % baseKey, % subKey dsn, PWD, % pwd
-        if (defaultDsn) {
-            OdbcReg.default.dsn := defaultDsn
-            RegWrite, REG_SZ, % baseKey, % subKey, defaultDsn,   % OdbcReg.default.dsn
+        l_source := OdbcReg.subKey OdbcReg.sourcesKey
+        l_found := 0
+        Loop, % OdbcReg.baseKey, % l_source
+        {
+            if (A_LoopRegName == a_settings.dsn){
+                l_found := 1
+            }
+        }
+        if !(l_found){
+            OdbcReg.write(OdbcReg.sourcesKey, a_settings.dsn, a_driver)
         }
 
-        if (defaultOwner) {
-            OdbcReg.default.owner := defaultOwner
-            RegWrite, REG_SZ, % baseKey, % subKey, defaultOwner, % OdbcReg.default.owner
+        ; Save the dsn information
+        if (a_default){
+            OdbcReg.write("dsn", a_default)
         }
-
-
+        OdbcReg.write(a_settings.dsn, "UID", a_settings.uid)
+        OdbcReg.write(a_settings.dsn, "PWD", a_settings.pwd)
+        OdbcReg.write(a_settings.dsn, "owner", a_settings.owner)
 
     }
-
 }
+
+
+
 

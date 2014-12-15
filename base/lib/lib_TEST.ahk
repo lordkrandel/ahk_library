@@ -180,8 +180,8 @@ class FileTest extends TestBase {
 class TestRunner {
     ;; Runs all tests
     run(){
-        ; Run tests
         try {
+            Core.init()
             (new StringTest()).run()
             (new ObjectTest()).run()
             (new WindowTest()).run()
@@ -189,12 +189,12 @@ class TestRunner {
             (new OdbcRegTest()).run()
             (new FileTest()).run()
             ;(new ControlTest()).run()
+            Msgbox, % "Tests successful"
         } catch e {
             Msgbox, 48, % "Test failed"
                 , % "[" e.what "()::" e.line (e.extra ? " " e.extra : "") "] `n`n" e.message  
-            ExitApp
         } finally {
-
+            ExitApp
         }
     }
 }

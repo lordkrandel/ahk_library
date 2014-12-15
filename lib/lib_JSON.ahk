@@ -1,5 +1,7 @@
 #include <lib_CORE>
 
+global JSON
+
 ;; Javascript Json parser class, through OLE
 class JSONParser {
 

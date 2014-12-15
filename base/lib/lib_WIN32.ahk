@@ -1,7 +1,5 @@
 #include <LIB_CORE>
 
-Core.merge(Win32, Win32Constants)
-
 ;; Windows OS static handler class
 Class Win32 {
 

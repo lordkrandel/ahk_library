@@ -94,7 +94,7 @@ class ControlTest extends TestBase {
 }
 
 ;; OdbcSettings test class
-class OdbcSettingsTest {
+class OdbcSettingsTest extends TestBase {
 
     ;; Run the test
     run(){
@@ -117,7 +117,7 @@ class OdbcSettingsTest {
 }
 
 ;; OdbcReg test class
-class OdbcRegTest {
+class OdbcRegTest extends TestBase {
 
     ;; Run the test
     run(){
@@ -146,7 +146,7 @@ class OdbcRegTest {
 }
 
 ;; Test for the Window class
-class WindowTest {
+class WindowTest extends TestBase {
     ;; Runs the test
     run(){
         SetTitleMatchMode, 2
@@ -160,12 +160,19 @@ class WindowTest {
             if (l_geom["x"] != 200){
                 throw Exception("l_geom.x != 200")
             }
-
         } catch e {
             throw e 
         } finally {
             WinClose, % l_notepad.hwnd_string
         }
+    }
+}
+
+;; File class tests
+class FileTest extends TestBase {
+    ;; Runs the test
+    run(){
+        
     }
 }
 
@@ -180,7 +187,8 @@ class TestRunner {
             (new WindowTest()).run()
             (new OdbcSettingsTest()).run()
             (new OdbcRegTest()).run()
-            (new ControlTest()).run()
+            (new FileTest()).run()
+            ;(new ControlTest()).run()
         } catch e {
             Msgbox, 48, % "Test failed"
                 , % "[" e.what "()::" e.line (e.extra ? " " e.extra : "") "] `n`n" e.message  
@@ -189,6 +197,4 @@ class TestRunner {
 
         }
     }
-}    
-
-(new TestRunner()).run()
+}

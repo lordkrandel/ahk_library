@@ -27,12 +27,12 @@ class Control {
     __Get(a_name) {
         l_property := this.properties[a_name]
         if (l_property){
-            return this[l_property]( a_name )
+            return this[l_property](a_name)
         }
     }
 
     ;; Return an object description 
-    getDescription( aname = ""){
+    getDescription(){
         return { geom    : this.geom
                , text    : this.text
                , style   : this.style

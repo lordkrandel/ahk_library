@@ -6,12 +6,12 @@ class Doc_base {
     ;; constructor
     ;; a_match: match object
     __new(a_match){
-        l_count := m.count()
+        l_count := a_match.count()
         Loop, % l_count
         {
             v := a_match.value(A_index)
             if (v){
-                k := m.name(A_index)
+                k := a_match.name(A_index)
                 this[k] := a_match.value(A_index)
             }
         }

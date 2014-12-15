@@ -1,7 +1,5 @@
 #include <LIB_CORE>
 
-Core.mixin(String, StringAsPathMixin)
-
 ;; File object wrapper
 class File {
 

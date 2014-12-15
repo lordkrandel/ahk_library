@@ -1,13 +1,12 @@
 #include <lib_CORE>
 
-global JSON
-
 ;; Javascript Json parser class, through OLE
 class JSONParser {
 
     ;; The parser requires a valid JSLint source file as a path
     ;; Javascript code gets read from disk and then interpreted by Windows Scripting Host
     __New(a_path) {
+        global JSON
         try{
             l_code := (new File(a_path, "r")).read()
             this.wsh := ComObjCreate("ScriptControl")

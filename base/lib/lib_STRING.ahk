@@ -1,8 +1,5 @@
 #include <LIB_CORE>
 
-; Merge String to VarBase
-Core.merge(VarBase, String)
-
 ;; Represents any string variable
 class String {
 

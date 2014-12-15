@@ -1,27 +1,5 @@
-#include %A_ScriptDir%\scripts\ac\optionsDialog.ahk ; Options Dialog
-#include %A_ScriptDir%\scripts\ac\acController.ahk  ; Controller
-
-:?*:dba.::
-!Space::
-    ; Escludi Powerbuilder_treeview
-    ControlGetFocus, l_output, A
-    if (instr(l_output, "PBTreeView32") == 1) {
-        return
-    }
-    if !(ac) {
-        ac := new AutoComplete()
-    }
-    ac.controller.lastHwnd := WinActive("A")
-    ac.controller.setHotkey(A_thishotkey)
-    ac.show()
-return
-
-:?*:dba,::
-    Send dba.
-return
-
+;; Autocomplete dialog class
 class autoComplete extends g {  ; ________________________
-
 
     name  := "acWin"
     title := "autoComplete"

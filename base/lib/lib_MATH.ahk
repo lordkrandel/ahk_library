@@ -41,5 +41,3 @@ class StringMathMixin {
     }
 
 }
-
-Core.mixin(VarBase, StringMathMixin)

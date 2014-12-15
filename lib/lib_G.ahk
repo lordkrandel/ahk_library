@@ -1,64 +1,68 @@
+#include <lib_CORE>
+
+;; Base class for AutoHotkey GUI windows
 class g extends Window{
 
     name  := ""
     title := ""
-
-    geom  := { w: 500
-             , h: 340
-             , x: "center"
-             , y: "center" }
-
-    properties := { "geom": "getPos" }
-
-    __Get(aname) {
-        n := this.properties[aname]
-        if (n){
-            return this[n]()
+    
+    ;; Geometry property is overridden
+    geom[]
+    {
+        get {
+            return this._geom
+        }
+        set {
+            this._geom := value
         }
     }
 
-    controlSet( c, subcommand = "", param3 = "" ){
-        GuiControl, % this.name ":" subcommand, % c , % param3
-    }
-    controlGet( c, subcommand = "", param4 = "" ){
-        GuiControlGet, s, % this.name ":" subcommand, % c, % param4
-        return % s
+    ;; Set default content of a control
+    controlSet( a_control, a_subcmd = "", a_param3 = "" ){
+        GuiControl, % this.name ":" a_subcmd, % a_control , % a_param3
     }
 
+    ;; Get default content of a control
+    controlGet( a_control, a_subcmd = "", a_param4 = "" ){
+        GuiControlGet, l_ret, % this.name ":" a_subcmd, % a_control, % a_param4
+        return % l_ret
+    }
+
+    ;; Close and unregister all window events
     close(){
         EventDispatcher.unregisterGui(this)
         Gui, % this.name ": Cancel"
         Gui, % this.name ": Destroy"
     }
+
+    ;; Show and register all window events
     show(){
-        g := this.name
-
-        this.geom.x := Core.firstValid( this.geom.x, "center")
-        this.geom.y := Core.firstValid( this.geom.y, "center")
-
-        Gui, %g%: +LabelGui +Resize +hwndwinHwnd
-        Gui, %g%: Show, % "h" this.geom.h
-                       . " w" this.geom.w
-                       . " x" this.geom.x
-                       . " y" this.geom.y
-                       , % this.title
+        this.geom.x := this.geom.x.or("center")
+        this.geom.y := this.geom.y.or("center")
+        Gui, % this.name ": +LabelGui +Resize +hwndwinHwnd"
+        Gui, % this.name ": Show", % "h" this.geom.h
+                         . " w" this.geom.w
+                         . " x" this.geom.x
+                         . " y" this.geom.y
+                         , % this.title
 
         this.hwnd := winHwnd
-
         EventDispatcher.registerGui(this)
     }
+    
+    ;; Hide the gui
     hide(){
         EventDispatcher.unregisterGui(this)
-        g := this.name
-        Gui, %g%: Submit
+        Gui, % this.name ": Submit"
     }
+    
+    ;; Hide the GUI in escape
     escape(){
         this.hide()
     }
+    
+    ;; Stub for the resize event handler
     size(){
     }
-
-
-
 
 }

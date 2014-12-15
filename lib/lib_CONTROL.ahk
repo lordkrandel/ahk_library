@@ -1,3 +1,6 @@
+#include <lib_CORE>
+
+;; Window Control class
 class Control {
 
     properties := { geom        : "getPos"
@@ -8,22 +11,27 @@ class Control {
                   , checked     : "getOtherProperty"
                   , visible     : "getOtherProperty" }
 
-    __Get(aname) {
-        n := this.properties[aname]
-        if (n){
-            return this[n]( aname )
-        }
-    }
 
-    __New(hwnd, ClassNN = ""){
+    ;; Constructor
+    __New(a_hwnd, a_ClassNN = ""){
         if (!ClassNN){
-            this.hwnd := hwnd
+            this.hwnd := a_hwnd
         } else {
-            ControlGet, h, hwnd,, % classNN, % "ahk_id " hwnd
-            this.hwnd := h
+            ControlGet, l_ret, hwnd,, % a_classNN, % "ahk_id " a_hwnd
+            this.hwnd := l_ret
+            this.hwnd_string := "ahk_id " this.hwnd
         }
     }
 
+    ;; Setup Getters 
+    __Get(a_name) {
+        l_property := this.properties[a_name]
+        if (l_property){
+            return this[l_property]( a_name )
+        }
+    }
+
+    ;; Return an object description 
     getDescription( aname = ""){
         return { geom    : this.geom
                , text    : this.text
@@ -32,17 +40,24 @@ class Control {
                , checked : this.checked
                , visible : this.visible }
     }
+
+    ;; Geometry getter
     getPos(){
-        ControlGetPos, x, y, w, h,, % "ahk_id " this.hwnd
-        return { x: x, y: y, w: w, h: h }
+        ControlGetPos, a_x, a_y, a_w, a_h,, % this.hwnd_string
+        return { x: a_x, y: a_y, w: a_w, h: a_h }
     }
+
+    ;; Text getter
     getText(){
-        ControlGetText, txt,, % "ahk_id " this.hwnd
-        return txt
+        ControlGetText, l_text,, % this.hwnd_string
+        return l_text
     }
-    getOtherProperty(aname){
-        ControlGet, result, %aname%,,, % "ahk_id " this.hwnd
-        return result
+
+    ;; Getter for other properties
+    getOtherProperty(a_name){
+        ControlGet, l_ret, % a_name,,, % this.hwnd_string
+        return l_ret
     }
+
 }
 

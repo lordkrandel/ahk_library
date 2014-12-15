@@ -1,19 +1,24 @@
+#include <LIB_CORE>
+
+;; An auto_ptr for callbacks
 class Callback {
 
-    ; A sort of auto_ptr for callbacks
-
+    ;; The actual registered callback
     event(){
         Msgbox, % this.__class " callback triggered"
     }
 
-    __new(options = "", paramCount = "", id = ""){
-        this.addr := RegisterCallback( this.__class ".event" , options, paramCount, id )
+    ;; Constructor, registers the callback
+    __new(a_options = "", a_paramCount = "", a_id = ""){
+        this.addr := RegisterCallback( this.__class ".event" , a_options, a_paramCount, a_id )
     }
 
+    ;; Destructor, destroys the callback
     __delete(){
         if (this.addr){
             DllCall("GlobalFree", "Ptr", this.addr)
         }
     }
+
 }
 

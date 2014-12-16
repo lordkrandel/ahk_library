@@ -5,23 +5,158 @@ class File {
 
     ;; create the file Object
     __new(a_parms*){
-        this._fileobject := fileOpen(a_parms*)
+        this._file := fileOpen(a_parms*)
     }
 
-    ;; wrap all file Object properties
-    __get(a_name){
-        if (!File[a_name]){
-            return this._fileobject[a_name]
-        }
+    ;; Seek wrapper
+    Seek(a_params*){
+        return this._file.Seek(a_params*)
     }
 
-    ;; forward all file Object function calls
-    __call(a_name, a_params*){
-        if (!File[a_name]){
-            return this._fileobject[a_name].(a_params*)
-        }
+    ;; Tell wrapper
+    Tell(){
+        return this._file.Tell()
     }
+
+    ;; Close wrapper
+    Close(){
+        return this._file.Close()
+    }
+
+    ;; Position wrapper
+    position[] {
+        get{
+            return this._file.tell()
+        }
+        set{
+            this._file.seek(value)
+        }
+    }    
+
+    ;; Pos wrapper
+    pos[] {
+        get{
+            return this._file.tell()
+        }
+        set{
+            this._file.seek(value)
+        }
+    }    
+
+    ; Read wrappers ________________________________
     
+        ;; read wrapper
+        Read(a_params*){
+            return this._file.read(a_params*)
+        }
+        
+        ;; readline wrapper
+        Readline(a_params*){
+            return this._file.readline(a_params*)
+        }
+
+        ;; RawRead wrapper
+        RawRead(a_params*){
+            return this._file.RawRead(a_params*)
+        }
+        
+        ;; ReadUint wrapper
+        ReadUInt(){
+            return this._file.ReadUint()
+        }
+
+        ;; ReadInt wrapper
+        ReadInt(){
+            return this._file.ReadInt()
+        }
+
+        ;; ReadInt64 wrapper
+        ReadInt64(){
+            return this._file.ReadInt64()
+        }
+
+        ;; ReadShort wrapper
+        ReadShort(){
+            return this._file.ReadShort()
+        }
+
+        ;; ReadChar wrapper
+        ReadChar(){
+            return this._file.ReadChar()
+        }
+
+        ;; ReadUChar wrapper
+        ReadUChar(){
+            return this._file.ReadUChar()
+        }
+
+        ;; ReadDouble wrapper
+        ReadDouble(){
+            return this._file.ReadDouble()
+        }
+
+        ;; ReadFloat wrapper
+        ReadFloat(){
+            return this._file.ReadFloat()
+        }
+
+    ; Write wrappers ________________________________
+
+        ;; write wrapper
+        Write(a_params*){
+            return this._file.write(a_params*)
+        }
+
+        ;; writeline wrapper
+        WriteLine(a_params*){
+            return this._file.WriteLine(a_params*)
+        }
+
+        ;; RawWrite wrapper
+        RawWrite(a_params*){
+            return this._file.RawWrite(a_params*)
+        }
+
+        ;; WriteUint wrapper
+        WriteUint(a_num) {
+            return this._file.WriteUint(a_num)
+        }
+
+        ;; WriteInt wrapper
+        WriteInt(a_num) {
+            return this._file.WriteInt(a_num)
+        }
+
+        ;; WriteInt64 wrapper
+        WriteInt64(a_num){
+            return this._file.WriteInt64(a_num)
+        }
+
+        ;; ReadShort wrapper
+        WriteShort(a_num){
+            return this._file.WriteShort(a_num)
+        }
+
+        ;; WriteChar wrapper
+        WriteChar(a_num){
+            return this._file.WriteChar(a_num)
+        }
+
+        ;; WriteUChar wrapper
+        WriteUChar(a_num){
+            return this._file.WriteUChar(a_num)
+        }
+
+        ;; WriteDouble wrapper
+        WriteDouble(a_num){
+            return this._file.WriteDouble(a_num)
+        }
+
+        ;; WriteFloat wrapper
+        WriteFloat(a_num){
+            return this._file.WriteFloat(a_num)
+        }
+
 }
 
 ;; handles standard input as a file object
@@ -41,6 +176,7 @@ class StdOut extends File {
     __new(){
         this._fileobject := FileOpen(DllCall("GetStdHandle", "int", -11, "ptr"), "h `n")
     }
+
 }
 
 ;; Handles any string as a potential filepath
@@ -98,7 +234,7 @@ class StringAsPathMixin {
         return l_obj
     }
 
-    ;; returns 1 if the filepath contains any file
+    ;; returns 1 if the filepattern contains any file
     hasfiles(){
         loop, %this%
         {

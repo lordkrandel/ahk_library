@@ -44,8 +44,9 @@ class Core {
         "".base.base := VarBase
         Core.merge(VarBase, String)
         Core.mixin(VarBase, StringAsPathMixin)
-        Core.mixin(VarBase, StringMathMixin)
-        Core.merge(Win32, Win32Constants)        
+        Core.mixin(VarBase, StringAsMathMixin)
+        Win32 := new Win32()
+        Core.merge(Win32, Win32Constants)
         
     }
 
@@ -86,7 +87,7 @@ class Core {
     }
 
     ;; Merge all methods and properties from source objects to destination object
-    merge(a_dest, a_parms*){
+    merge(a_dest, a_parms*){    
         for _, l_source in a_parms {
             for k, v in l_source {
                 if (k == "__Class"){
@@ -94,7 +95,6 @@ class Core {
                 }
                 a_dest[k] := v
             }
-
         }
         return a_dest
     }

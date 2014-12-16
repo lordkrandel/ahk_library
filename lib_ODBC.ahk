@@ -176,10 +176,10 @@ class OdbcReg {
 
         l_ret := {}
         l_baseKey := OdbcReg.baseKey 
-        l_subKey  := OdbcReg.subKey "\" OdbcReg.sourcesKey
+        l_subKey  := OdbcReg.subKey OdbcReg.sourcesKey
 
         ; Get all the subkeys
-        Loop, %l_baseKey%, %l_subKey%
+        Loop, % l_baseKey, % l_subKey, 1, 1
         {
             l_s .= ( l_s ? "," : "") A_loopregname
         }

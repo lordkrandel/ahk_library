@@ -1,5 +1,24 @@
 #include <lib_CORE>
 
+; Tests missing
+; =================
+; lib_FILE
+; lib_MATH
+; lib_LOG
+; lib_WINDOW
+; lib_CALLBACK
+; lib_ODBC
+; lib_EVENTDISPATCHER
+; lib_CLIP
+; lib_CONTROL
+; lib_LISTBOX
+; lib_SOCKET
+; lib_WIN32
+; lib_G
+; lib_G_SINGLESELECT
+; lib_CONTROL
+; lib_JSON
+
 ;; Base class for tests
 class TestBase {
 
@@ -172,7 +191,7 @@ class WindowTest extends TestBase {
 class FileTest extends TestBase {
     ;; Runs the test
     run(){
-        
+       ;; XXX: Incomplete
     }
 }
 
@@ -197,4 +216,6 @@ class TestRunner {
             ExitApp
         }
     }
+
 }
+

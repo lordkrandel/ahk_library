@@ -1,43 +1,51 @@
-#include <lib_STRING> 
+#include <lib_STRING>
 #include <lib_OBJ>
-#include <lib_FILE>            ; tests
-#include <lib_MATH>            ; tests
-#include <lib_LOG>             ; tests
-#include <lib_WINDOW>          ; tests
-#include <lib_CALLBACK>        ; tests
-#include <lib_ODBC>            ; test Query
-#include <lib_EVENTDISPATCHER> ; tests
-#include <lib_CLIP>            ; tests
+#include <lib_FILE>
+#include <lib_MATH>
+#include <lib_LOG>
+#include <lib_WINDOW>
+#include <lib_CALLBACK>
+#include <lib_ODBC>
+#include <lib_EVENTDISPATCHER>
+#include <lib_CLIP>
 #include <lib_TRAYTIP>
-#include <lib_CONTROL>         ; tests
-#include <lib_LISTBOX>         ; tests
-#include <lib_SOCKET>          ; tests
-#include <lib_WIN32>           ; tests
-#include <lib_G>               ; tests
-#include <lib_G_SINGLESELECT>  ; tests
-#include <lib_CONTROL>         ; tests
+#include <lib_CONTROL>
+#include <lib_LISTBOX>
+#include <lib_SOCKET>
+#include <lib_WIN32>
+#include <lib_G>
+#include <lib_G_SINGLESELECT>
+#include <lib_CONTROL>
 #include <lib_JSON>
 
 ;; Base class for all variables
 class VarBase {
 }
 
-;; Universal basic functions that should be accessible anywhere
+;; Universal basic functions that should be in a global scope
 class Core {
 
+    ;; Guard against double initialization
+    static init_done := ""
 
+    ;; Initialize the environment
     init(){
         global
 
+        SetWorkingDir %A_ScriptDir%
+        Sendmode, Input
+
+        if (Core.init_done){
+            return
+        }
+        Core.init_done := 1
+        
         ; Assign VarBase as a base class for all variables
         "".base.base := VarBase
         Core.merge(VarBase, String)
         Core.mixin(VarBase, StringAsPathMixin)
         Core.mixin(VarBase, StringMathMixin)
         Core.merge(Win32, Win32Constants)        
-        
-        SetWorkingDir %A_ScriptDir%
-        Sendmode, Input
         
     }
 
@@ -101,5 +109,6 @@ class Core {
             setbatchlines, % -1
         }
     }
+
 }
 

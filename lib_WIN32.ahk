@@ -19,12 +19,13 @@ Class Win32 {
 
     }
  
-    ;; Call DLLcall on not found functions
+    ;; Call DLLcall when function is not found
     __call(a_name, a_params*){
-        if (!Win32[a_name]){
+        l_func := Win32[a_name]
+        if !(l_func && isfunc(l_func)){
             return DllCall(a_name, a_params*)
         }
-        return Win32[a_name](a_params*)
+        return l_func.(a_params*)
     }
 
 }

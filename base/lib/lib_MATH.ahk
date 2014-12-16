@@ -1,5 +1,5 @@
 ;; Provides common arithmetic, logic and algebric functions for all string variables
-class StringMathMixin {
+class StringAsMathMixin {
 
     ;; Function Xor
     xor(a_arg) {

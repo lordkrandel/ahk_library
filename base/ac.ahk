@@ -1,10 +1,10 @@
+#include %A_Scriptdir%
 #include <lib_CORE>
+Core.init()
+
 #include ac\ac.ahk
 #include ac\optionsDialog.ahk
 #include ac\acController.ahk
-
-Core.init()
-Menu, Tray, Icon, img\kube.ico
 
 :?*:dba.::
 !Space::
@@ -25,6 +25,3 @@ return
     Send dba.
 return
 
-#r::
-    reload
-return

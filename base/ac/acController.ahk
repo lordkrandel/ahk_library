@@ -1,4 +1,4 @@
-#include %A_ScriptDir%\ac\levels.ahk
+#include ac\levels.ahk
 
 class acController {
 

@@ -1,6 +1,6 @@
 ;; Handles log operations on different channels:
 ;; textfile, stdout, in-memory object
-class Log {
+class Log extends ObjectBase {
 
     code  := { warn: "W" , info: "I" , error: "E", debug: "D" }
     files := []

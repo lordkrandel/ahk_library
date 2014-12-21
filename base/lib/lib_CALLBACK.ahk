@@ -1,7 +1,7 @@
 #include <LIB_CORE>
 
 ;; An auto_ptr for callbacks
-class Callback {
+class Callback extends ObjectBase {
 
     ;; The actual registered callback
     event(){

@@ -1,5 +1,5 @@
 ;; GUI Iteration base class
-class Level {
+class Level extends ObjectBase {
     
     ;; constructor over existing ODBC class
     __new(a_odbc){
@@ -21,7 +21,7 @@ class DsnLevel extends Level{
     name := "DSN"
 
     ;; Get DSN entries FROM the registry
-    getEntries( a_value="" ){
+    getEntries( a_value="" ) {
         l_ret := "|" OdbcReg.dsnList.join("|")
         return l_ret
     }

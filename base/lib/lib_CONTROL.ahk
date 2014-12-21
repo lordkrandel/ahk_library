@@ -1,7 +1,7 @@
 #include <lib_CORE>
 
 ;; Window Control class
-class Control {
+class Control extends ObjectBase {
 
     properties := { geom        : "getPos"
                   , text        : "getText"

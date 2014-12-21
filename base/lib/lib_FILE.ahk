@@ -1,7 +1,7 @@
 #include <LIB_CORE>
 
 ;; File object wrapper
-class File {
+class File extends ObjectBase {
 
     ;; create the file Object
     __new(a_parms*){

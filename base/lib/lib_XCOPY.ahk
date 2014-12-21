@@ -1,5 +1,5 @@
 ;; Xcopy wrapper class, helps with parameters 
-class Xcopy {
+class Xcopy extends ObjectBase {
     copy(source, dest, settings = "" ){ 
         if (!settings)
             settings := new XcopySettings()
@@ -9,7 +9,7 @@ class Xcopy {
 }
 
 ;; Xcopy parameters class, autogenerates some default argument and compiles the runstring
-class XcopySettings {
+class XcopySettings extends ObjectBase {
 
     overWrite := 1
     onlyArchiveAttrib := 0

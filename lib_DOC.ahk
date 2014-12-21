@@ -1,7 +1,7 @@
 #include <lib_CORE>
 
 ;; Base class for documentation objects
-class Doc_base {
+class Doc_base extends ObjectBase {
 
     ;; constructor
     ;; a_match: match object
@@ -48,7 +48,7 @@ class Doc_class extends Doc_base {
 }
 ;; Doc automatically creates markdown from lib sources.
 ;; The markdown has then to be put into HTML with the proper tool
-class Doc {
+class Doc extends ObjectBase {
 
     ;; constructor
     ;; a_filename: name of the file to be parsed

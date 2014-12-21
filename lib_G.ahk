@@ -1,7 +1,7 @@
 #include <lib_CORE>
 
 ;; Base class for AutoHotkey GUI windows
-class g extends Window{
+class g extends Window {
 
     name  := ""
     title := ""

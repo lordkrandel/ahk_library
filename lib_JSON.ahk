@@ -1,7 +1,7 @@
 #include <lib_CORE>
 
 ;; Javascript Json parser class, through OLE
-class JSONParser {
+class JSONParser extends ObjectBase {
 
     ;; The parser requires a valid JSLint source file as a path
     ;; Javascript code gets read from disk and then interpreted by Windows Scripting Host

@@ -1,7 +1,7 @@
 #include <LIB_CORE>
 
 ;; Windows OS static handler class
-Class Win32 {
+Class Win32 extends ObjectBase {
 
     ;; Numput wrapper
     put(a_value, a_type="", a_address=0, a_offset=0){

@@ -120,7 +120,7 @@ class ObjectBase {
         if !(isobject(this))
             return
         for k, v in this {
-            l_ret .= (k > 1 ? a_sep : "" ) v
+            l_ret .= (l_ret != "" ? a_sep : "" ) v
         }
         return l_ret
     }
@@ -148,10 +148,33 @@ class ObjectBase {
     map(callback, params*) {
         if !(isobject(this))
             return
+        
+        ; The callback is a function of each object called
+        if ( regexmatch(callback, "i)this\.")){
+            callback := regexreplace(callback, "i)this\.", "")
+            if regexmatch(callback, "i)\_\_get"){
+                l_get := 1
+            } else if regexmatch(callback, "i)\_\_set"){
+                l_set := 1
+            } else {
+                l_call_on_itself := 1
+            }
+        }
+        
         l_ret := {}
         for k, v in this {
+            ; Just get a property
+            if (l_get){
+                l_new := v[params[1]]
+            ; Just set a property
+            } else if (l_set){
+                v[params[1]] := params[2]
+                l_new := v
+            ; Called on the object itself
+            } else if (l_call_on_itself){
+                l_new := v[callback](params*)
             ; Class static callbacks need the extra this argument
-            if (instr(callback, ".")){
+            } else if (instr(callback, ".")) {
                 l_new := callback.(this, k, v, params*)
             } else {
                 l_new := callback.(k, v, params*)

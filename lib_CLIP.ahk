@@ -1,8 +1,24 @@
 #include <lib_CORE>
 
 ;; Clipboard functions
-class Clip {
+class Clip extends ObjectBase {
 
+    ;; Copy to clipboard and wait
+    copy(){
+        Send, ^c
+        Sleep, 50
+        ClipWait,
+        return % ClipBoard
+    }
+
+    ;; Paste from clipboard and wait
+    paste(a_text){
+        Clipboard := a_text
+        ClipWait,
+        Send, ^v
+    }    
+
+    ;; Paste from clipboard and ver
     ensurePaste(a_new_value){
 
         ; Backup the old value
@@ -36,5 +52,5 @@ class Clip {
         ClipBoard := l_backup
 
     }
-
+    
 }

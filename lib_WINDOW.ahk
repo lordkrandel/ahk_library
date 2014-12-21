@@ -1,7 +1,7 @@
 #include <LIB_CORE>
 
 ;; Handles any Window
-class Window {
+class Window extends ObjectBase {
 
     ;; property geometry, get&set
     geom[]{

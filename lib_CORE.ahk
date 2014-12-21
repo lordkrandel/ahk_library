@@ -17,13 +17,14 @@
 #include <lib_G_SINGLESELECT>
 #include <lib_CONTROL>
 #include <lib_JSON>
+#include <lib_SQLFORMATTER>
 
 ;; Base class for all variables
 class VarBase {
 }
 
 ;; Universal basic functions that should be in a global scope
-class Core {
+class Core extends ObjectBase {
 
     ;; Guard against double initialization
     static init_done := ""
@@ -32,6 +33,7 @@ class Core {
     init(){
         global
 
+        #NoEnv
         SetWorkingDir %A_ScriptDir%
         Sendmode, Input
 
@@ -46,8 +48,14 @@ class Core {
         Core.mixin(VarBase, StringAsPathMixin)
         Core.mixin(VarBase, StringAsMathMixin)
         Win32 := new Win32()
+        TrayTip := new Traytip()
+        Clip := new Clip()
         Core.merge(Win32, Win32Constants)
-        
+
+        ; Get home variable
+        EnvGet, l_home, HOME
+        Core.home := l_home
+
     }
 
     ;; Returns the range array

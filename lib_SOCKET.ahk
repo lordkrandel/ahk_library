@@ -1,7 +1,7 @@
 #include <LIB_CORE>
 
 ;; SocketAddress data structure
-class SocketAddress {
+class SocketAddress extends ObjectBase {
 
     size := 16
 
@@ -48,7 +48,7 @@ class SocketAddress {
 }
 
 ;; Socket class
-class Socket {
+class Socket extends ObjectBase {
 
     settings := {}
 

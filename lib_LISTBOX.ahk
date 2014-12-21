@@ -1,7 +1,7 @@
 #include <LIB_CORE>
 
 ;; Handles ListBox controls
-class ListBox {
+class ListBox extends ObjectBase {
 
     ;; Constructor
     __new(a_hwnd){

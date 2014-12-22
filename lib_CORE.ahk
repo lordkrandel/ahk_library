@@ -6,6 +6,7 @@
 #include <lib_WINDOW>
 #include <lib_CALLBACK>
 #include <lib_ODBC>
+#include <lib_QUERY>
 #include <lib_EVENTDISPATCHER>
 #include <lib_CLIP>
 #include <lib_TRAYTIP>

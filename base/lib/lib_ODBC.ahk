@@ -26,6 +26,26 @@ class OdbcSettings extends ObjectBase {
 
 }
 
+class SQLiteOdbcSettings extends OdbcSettings {
+
+    ;; Constructor
+    __new(a_filename="db.sqlite"){
+        this.filename := a_filename
+    }
+
+    get(byref a_dsn, byref a_uid, byref a_pwd, byref a_owner=""){
+        throw Exception("Disabled")
+    }
+
+    ;; Builds the connectString
+    connstring(){
+        return "Driver=SQLite3 ODBC Driver;Database=%s;".fmt(this.filename)
+    }
+
+    
+}
+
+
 ;; Models an ODBC connection
 class ODBC extends ObjectBase {
 
@@ -73,6 +93,11 @@ class ODBC extends ObjectBase {
             l_msg := l_msg.fmt( this.settings.connstring(), l_exc.message) 
             throw Exception(l_msg)
         }
+    }
+
+    ;; Execute a DDL statement
+    statement(a_sql){
+        this.conn.execute(a_sql)
     }
 
 }

@@ -1,5 +1,6 @@
 #include <lib_CORE>
 
+
 ;; Models a single SQL query
 class Query extends ObjectBase {
 

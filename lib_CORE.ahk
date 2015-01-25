@@ -19,6 +19,7 @@
 #include <lib_CONTROL>
 #include <lib_JSON>
 #include <lib_SQLFORMATTER>
+#include <lib_XCOPY>
 
 ;; Base class for all variables
 class VarBase {
@@ -48,10 +49,13 @@ class Core extends ObjectBase {
         Core.merge(VarBase, String)
         Core.mixin(VarBase, StringAsPathMixin)
         Core.mixin(VarBase, StringAsMathMixin)
+
         Win32 := new Win32()
+        Win32Functions := new Win32Functions()
         TrayTip := new Traytip()
         Clip := new Clip()
         Core.merge(Win32, Win32Constants)
+        JSON := new JSON()
 
         ; Get home variable
         EnvGet, l_home, HOME
@@ -118,6 +122,18 @@ class Core extends ObjectBase {
             setbatchlines, % -1
         }
     }
-
+    
+    ;; 20141231 Get a variable value from quoted name
+    fromQuotedName(a_quotedname){
+        l_split := a_quotedname.split(".")
+        for k, v in l_split {
+            if (k == 1){
+                l_current := %v%
+            } else {
+                l_current := l_current[v]
+            }				
+        }
+        return l_current
+    }
+    
 }
-

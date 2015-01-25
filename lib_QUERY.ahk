@@ -1,42 +1,88 @@
 #include <lib_CORE>
 
-
-;; Models a single SQL query
-class Query extends ObjectBase {
+;; Models a DDL command over 
+class QueryCommand extends ObjectBase {
 
     ;; Constructor
-    __new(a_params*){
+    __new(a_params*) {
         l_count := a_params.maxIndex()  
-        if (l_count == 0){
+        if (l_count == 0) {
             throw Exception("No constructor accepts 0 parameters ")
-        } else if (l_count == 1){
+            return
+        } else if (l_count == 1) {
             this.conn := Odbc.conn
             this.sql  := a_params[1]
-        } else if (l_count == 2){
+        } else if (l_count == 2) {
             this.conn := a_params[1]
             this.sql  := a_params[2]
-        } else if (l_count > 2){
+        } else if (l_count > 2) {
+            throw Exception("No constructor accepts more than 2 parameters ")
+            return
+        }
+    }
+
+    ;; Execute
+    execute() {
+        ; try to connect
+        try {
+            l_command := ComObjCreate("ADODB.Command")
+            l_command.ActiveConnection := this.conn
+        } catch l_exc {
+            l_msg := "Cannot attach the command to the connection`n`nError:`n%s"
+            l_msg := l_msg.fmt(l_exc.message) 
+            throw Exception(l_msg)
+            return
+        }
+        try {
+            l_command.CommandText := this.sql
+            l_command.CommandType := 1 ;adCmdText
+            l_command.execute()
+        } catch l_exc {
+            l_msg := "Cannot execute command `n`n%s`n`nError:`n%s"
+            l_msg := l_msg.fmt(this.sql, l_exc.message) 
+            throw Exception(l_msg)
+            return
+        }
+    }
+
+}
+
+;; Models a single  SQL query
+class Query extends ObjectBase {
+    
+    ;; Constructor
+    __new(a_params*) {
+        l_count := a_params.maxIndex()  
+        if (l_count == 0) {
+            throw Exception("No constructor accepts 0 parameters ")
+        } else if (l_count == 1) {
+            this.conn := Odbc.conn
+            this.sql  := a_params[1]
+        } else if (l_count == 2) {
+            this.conn := a_params[1]
+            this.sql  := a_params[2]
+        } else if (l_count > 2) {
             throw Exception("No constructor accepts more than 2 parameters ")
         }
     }
 
     ;; Destructor
-    __delete(){
-        if (this.rs && this.rs.state != 0){
+    __delete() {
+        if (this.rs && this.rs.state != 0) {
             this.rs.close()
         }
     }
 
     ;; Execute the current query
-    do(){
+    do() {
         
         ; try to connect
         try {
             this.rs := ComObjCreate("ADODB.Recordset")
             this.rs.ActiveConnection := this.conn
         } catch l_ex {
-            l_msg := "Cannot connect to database`n`nError:`n%s"
-            l_msg := l_msg.fmt( this.settings.connstring(), l_exc.message) 
+            l_msg := "Cannot attach the query to the connection`n`nError:`n%s"
+            l_msg := l_msg.fmt(l_exc.message) 
             throw Exception(l_msg)
             return
         }
@@ -59,33 +105,33 @@ class Query extends ObjectBase {
     }
     
     ;; execute is an alias to the do() function
-    execute(){
+    execute() {
         return this.do()
     }
     
     ;; Returns all rows from the query
-    fetchAll(){
+    fetchAll() {
         l_ret := []
         for k, v in this {
             l_ret.insert(k, v)
         }
         return l_ret
     }
-   
+    
     ;; Enumerate rows
-    _NewEnum(){
+    _NewEnum() {
         return new QueryEnum(this.rs)
     }
     
 }
 
 
-;; Query recordset enumerator
+;;  Query recordset enumerator
 class QueryEnum extends ObjectBase {
     
     current := 0
     ;; Constructor
-    __New(a_recordset){
+    __New(a_recordset) {
 		this.recordset := a_recordset
 	}
     
@@ -94,13 +140,13 @@ class QueryEnum extends ObjectBase {
         
         ; Fetch next record
         this.current ++
-        if (this.current == 1){
+        if (this.current == 1) {
             this.recordset.moveFirst()
         } else {
             this.recordset.movenext()
         }
         ; Return false if there are no more records
-        if (this.recordset.EOF){
+        if (this.recordset.EOF) {
             ; Close cursor
             this.recordset.close()
             return false
@@ -123,29 +169,31 @@ class QueryEnum extends ObjectBase {
 
 ;; Record class
 class QueryRecord extends ObjectBase {
+
     ;; Get keys array, override
-    keys(){
+    keys() {
         return this.map("this.__get", "key")
     }
     ;; Get values array, override
-    values(){
+    values() {
         return this.map("this.__get", "value")
     }
-    toString(a_sep="|"){
+    toString(a_sep="|") {
         return this.values().join(a_sep)
     }
+
 }
 
 ;; Key-pair value 
 class QueryValue extends ObjectBase {
 
     ;; constructor
-    __new(a_key, a_value){
+    __new(a_key, a_value) {
         this.key := a_key
         this.value := a_value
     }
     ;; Convert to string
-    toString(){
+    toString() {
         l_ret := this.key ": " this.value
         return l_ret
     }

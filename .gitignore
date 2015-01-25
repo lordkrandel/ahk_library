@@ -18,6 +18,8 @@ local.properties
 .classpath
 .settings/
 .loadpath
+base/fetchDB/*
+base/fetchDB.ahk
 
 # External tool builders
 .externalToolBuilders/
@@ -166,3 +168,5 @@ pip-log.txt
 .DS_Store
 *.exe
 *.ico
+base/downloader.ahk
+*.log

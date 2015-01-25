@@ -1,4 +1,3 @@
-#include %A_Scriptdir%
 #include <lib_CORE>
 Core.init()
 

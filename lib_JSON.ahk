@@ -5,7 +5,7 @@ class JSON extends ObjectBase {
 
     ;; The parser requires a valid JSLint source file as a path
     ;; Javascript code gets read from disk and then interpreted by Windows Scripting Host
-    __New(a_path) {
+    __New() {
         try {
             l_code := JSON.code
             this.wsh := ComObjCreate("ScriptControl")

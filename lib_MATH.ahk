@@ -40,4 +40,13 @@ class StringAsMathMixin {
         return % l_ret + 0
     }
 
+    ;; 20141231 Returns 0 if it is 0 and 1 if other
+    isNonZero(){
+        return (this == 0 ? 0 : 1)
+    }
+
+    ;; 20141231 Returns 0 if it is 1 and 0 if other
+    isZero(){
+        return (this == 0 ? 1 : 0)
+    }
 }

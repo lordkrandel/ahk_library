@@ -211,6 +211,21 @@ class ObjectBase {
         }
     }
 
+    ;; 20141230 Return value with minimum index
+    first() {
+        return this[this.minIndex()]
+    }
+
+    ;; 20141230 Return value with maximum index
+    last() {
+        return this[this.maxIndex()]
+    }
+
+	;; 20141230 Length of the object
+	count(){
+		return this.maxIndex().or(0)
+	}
+
 }
 
 ;; Override the Array() constructor for all arrays, even when called implicitly

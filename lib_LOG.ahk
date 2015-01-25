@@ -22,7 +22,7 @@ class Log extends ObjectBase {
     write( a_s, a_kind = "info" ){
 
         ; Save the time informations
-        FormatTime, l_time, %A_Now%, yyyy/MM/dd hh:mm:ss
+        FormatTime, l_time, %A_Now%, yyyy/MM/dd HH:mm:ss
 
         ; New start/stop indicator
         if (a_kind == "start") {
@@ -42,7 +42,7 @@ class Log extends ObjectBase {
         ; If there is a file, append the logstring
         for _, l_filename in this.files {
             if (l_filename == "*"){
-                fileAppend, % l_s "`n", *, % "UTF-8"
+                fileAppend, % l_s "`n", * ;, % "UTF-8"
             } else {
                 fileAppend, % l_s "`n", % l_filename, % "UTF-8"
             }

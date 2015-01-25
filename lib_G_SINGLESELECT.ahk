@@ -1,7 +1,7 @@
 #include <LIB_CORE>
 
 ;; Single entry selection dialog
-class selectDialog extends g {
+class SelectDialog extends g {
 
     name  := "selectDialog"
     title := "selectDialog"
@@ -15,46 +15,55 @@ class selectDialog extends g {
                          , "+Up"         : "arrowSlot"
                          , "+Down"       : "arrowSlot" }
              , controls: { "Edit1"       : "filter"    } }
-    geom       := ""
     entries    := ""
     hwnd       := ""
 
     ;; Constructor
-    __new( a_entries="", a_geom=""){
-
+    __new(a_entries="", a_geom="") {
         g := this.name
-
         Gui, %g%: +Resize 
         Gui, %g%: Font, s10, Verdana
-        Gui, %g%: Add, edit,    x0 y0  h20 hwndhwndedit    gEventDispatcher
-        Gui, %g%: Add, listbox, x0 y20     hwndhwndlistbox Choose0  0x100 +0x1000 ; Multi
+        this.geom := a_geom ? a_geom : {x: "center", y: "center", w: 600, h: 400}
 
-        this.listbox  := new Listbox(hwndlistbox)
-        this.win.edit := hwndedit
-        this.entries  := "|".join(a_entries)
-        this.geom     := Core.firstvalid(a_geom, { w: 400, h: 300 })
+        Gui, %g%: Add, edit, % ""
+            . " x" 0 
+            . " y" 0  
+            . " w" this.geom.w 
+            . " h" 20
+            . " hwnd" "l_hwndedit"    
+            . " g" "EventDispatcher"
+        Gui, %g%: Add, listbox, % ""
+            . " x" 0 
+            . " y" 20 
+            . " w" this.geom.w 
+            . " h" this.geom.h - 20 
+            . " hwnd" "l_hwndlistbox" 
+            . " Choose" 0  
+            . " 0x100"
+            . " +0x1000" ; Multi
+        this.listbox  := new Listbox(l_hwndlistbox)
+        this.win.edit := l_hwndedit
+        this.entries  := a_entries.join("|")
+        
     }
 
     ;; Event that fires when ENTER is pressed on the dialog
-    enterSlot(){
+    enterSlot() {
         Core.toggleMaxSpeed() 
-        this.hide()
-
-        ; Get all the selected fields
-        this.returnValue := this.controlGet( this.listbox.hwnd )
         
-        this.close()
+        ; Get all the selected fields
+        this.returnValue := this.controlGet(this.listbox.hwnd)
         Core.toggleMaxSpeed()
-
-        this.done()        
+        this.done()
+        this.close()
     }
 
     ;; Event: selection is done
-    done(){
+    done() {
     }
 
     ;; Event: window is resized
-    size(){
+    size() {
         Core.toggleMaxSpeed() 
         this.controlSet( this.listbox.hwnd, "Move", "w" A_GuiWidth " h" A_GuiHeight - 20)
         this.controlSet( this.win.edit,     "Move", "w" A_GuiWidth )
@@ -63,10 +72,10 @@ class selectDialog extends g {
     
     ;; Filter entries based on the edit value
     filter() {
-
+        
         ; Maximum speed, no pause
         Core.toggleMaxSpeed() 
-
+        
         ; Filter based on editvalue
         editValue := this.controlGet( this.win.edit )
         if (editValue){
@@ -81,43 +90,41 @@ class selectDialog extends g {
                     }
                 }
             }
-            entries .= "|".join(top) "|".join(bottom)
+            entries .= top.join("|") bottom.join("|")
         } else {
             entries .= this.entries
         }
-
+        
         ; Clear old entries        
         entries := "|" entries
         if (entries != "|"){
             ;Preselect the first entry
             entries := regexreplace(entries, "^\|([^\|]*+)\|*", "|$1||")
         }
-
+        
         ; Set the entries on the listbox
         this.listbox.set(entries)
-
+        
         ; Back to normal speed
         Core.toggleMaxSpeed() 
-
+        
    }
 
     ;; Event: arrow key is pressed
-    arrowSlot(){
-        htk := a_thishotkey
-
-        s := "+".in(htk)
-            ? s := htk.slice(2).qc().q( "{Shift down}", "{Shift Up}" )
-            : s := htk.qc()
+    arrowSlot() {
+        l_htk := a_thishotkey
+        l_s := "+".in(l_htk)
+               ? l_s := l_htk.slice(2).qc().q( "{Shift down}", "{Shift Up}" )
+               : l_s := l_htk.qc()
         ControlFocus,, % "ahk_id " this.listbox.hwnd
-        Send, % s
+        Send, % l_s
     }
 
     ;; Shows the window
-    show(){
+    show() {
         base.show()
-        this.listbox.set(this.entries)
-        this.controlSet( this.win.edit, "", "" )
-        this.listbox.choose(0)
+        this.controlSet(this.win.edit, "", "")
+        this.listbox.choose(1)
     }
     
 }

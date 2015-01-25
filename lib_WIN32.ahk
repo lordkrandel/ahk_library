@@ -1,4 +1,4 @@
-#include <LIB_CORE>
+#include <lib_CORE>
 
 ;; Windows OS static handler class
 Class Win32 extends ObjectBase {
@@ -14,9 +14,12 @@ Class Win32 extends ObjectBase {
         if ( a_offset ) {
             l_address += a_offset
         }
-
         l_address := Numput( a_value, l_address+0, 0, a_type )
-
+    }
+ 
+    ;; 20141231 Get last formatted error
+    GetError(){
+        return Win32Functions.GetLastFormattedError()
     }
  
     ;; Call DLLcall when function is not found
@@ -25,8 +28,34 @@ Class Win32 extends ObjectBase {
         if !(l_func && isfunc(l_func)){
             return DllCall(a_name, a_params*)
         }
-        return l_func.(a_params*)
+        return l_func.(Win32, a_params*)
     }
+
+}
+
+class Win32Functions extends ObjectBase {
+
+    ;; FormatMessage
+    FormatMessage(a_message_id="") {
+        if !(a_message_id) {
+            a_message_id := A_lasterror
+        }
+        VarSetCapacity(l_message, 2024)
+        Win32.FormatMessageW( ""
+            . "UInt", 0x1000
+            , "UInt", 0
+            , "UInt", a_message_id
+            , "UInt", 0x800
+            , "Ptr",  &l_message
+            , "UInt", 500
+            , "UInt", 0)
+        return "(%d) %s".fmt(a_message_id, l_message)
+    }
+    
+    ;; Getlasterror + Formatmessage
+    GetLastFormattedError() {
+        return Win32Functions.FormatMessage()
+    }    
 
 }
 
@@ -49,5 +78,17 @@ class Win32Constants {
     static LB_SETTOPINDEX                := 0x197
     static LB_GETCURSEL                  := 0x188
     static LB_SETSEL                     := 0x185
+
+    ; CreateTimerQueueTimer
+    ; http://msdn.microsoft.com/en-us/library/windows/desktop/ms682485%28v=vs.85%29.aspx
+    static WT_EXECUTEDEFAULT             := 0x00000000
+    static WT_EXECUTEINTIMERTHREAD       := 0x00000020
+    static WT_EXECUTEINIOTHREAD          := 0x00000001
+    static WT_EXECUTEINPERSISTENTTHREAD  := 0x00000080
+    static WT_EXECUTELONGFUNCTION        := 0x00000010
+    static WT_EXECUTEONLYONCE            := 0x00000008
+    static WT_TRANSFER_IMPERSONATION     := 0x00000100
+    static INFINITE                      := 0xFFFFFFFF
+    static SYNCHRONIZE                   := 0x00100000
 }
 

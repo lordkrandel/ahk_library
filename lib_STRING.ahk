@@ -4,28 +4,22 @@
 class String {
 
     ;; Logical or
-    or(a_other){
-        if (this){
-            return this
-        }
-        return a_other
+    or(a_other) {
+        return this ? this : a_other
     }
 
     ;; Logical and
-    and(a_other){
-        if (this && a_other){
-            return a_other
-        }
-        return 
+    and(a_other) {
+        return (this && a_other) ? this . a_other : ""
     }    
     
     ;; Returns the string length
-    len(){
+    len() {
         return Strlen(this)
     }
 
     ;; returns 1 if var has the given type
-    is(a_type){
+    is(a_type) {
         if this is %a_type%
         {
             return 1

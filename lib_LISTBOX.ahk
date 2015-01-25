@@ -40,25 +40,26 @@ class ListBox extends ObjectBase {
 
     ;; Get current value
     getValue() {
-        ControlGet, l_ret, Choice,,, % "ahk_id " this.hwnd
+        GuiControlGet, l_ret,, % "ahk_id " this.hwnd
         return l_ret
     }    
     
     ;; Get the entries' list
-    get(){
-        ControlGet, l_list, List,,, % "ahk_id " this.hwnd
-        return l_list
+    get() {
+        ControlGet, l_ret, List,,, % "ahk_id " this.hwnd
+        return l_ret.split("`n")
     }
 
     ;; Set the entries' list
-    set( a_entries ){
-        if (isObject(a_entries)){
-            l_entries := "|" a_entries.join("|")
+    set(a_entries) {
+        l_id := "ahk_id " this.hwnd
+        if (isObject(a_entries)) {
+            l_entries := a_entries.join("|")
         } else {
             l_entries := a_entries
         }
         this.entries := l_entries
-        GuiControl,, % this.hwnd, % l_entries 
+        guicontrol,, % this.hwnd, % l_entries
     }
 
 }

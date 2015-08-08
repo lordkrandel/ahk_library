@@ -86,7 +86,7 @@ class Query extends ObjectBase {
             throw Exception(l_msg)
             return
         }
-		
+
         ; try to retrieve
         try {
             this.rs.Source := this.sql

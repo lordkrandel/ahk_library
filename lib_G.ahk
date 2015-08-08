@@ -19,7 +19,7 @@ class g extends Window {
 
     ;; Set default content of a control
     controlSet( a_control, a_subcmd = "", a_param3 = "" ) {
-        GuiControl, % this.name ": " a_subcmd, % a_control , % a_param3
+        GuiControl, % this.name ":" a_subcmd, % a_control , % a_param3
     }
 
     ;; Get default content of a control

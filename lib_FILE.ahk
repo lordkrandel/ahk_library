@@ -225,9 +225,9 @@ class StringAsPathMixin {
     }
 
     ;; returns an array with all the files in the pattern
-    getfiles(a_folders = 0, a_recurse = 0){
+    getfiles(){
         l_obj := []
-        Loop, %this%, %a_folders%, %a_recurse%
+        loop, %this%
         {
             l_obj.insert(a_loopfilefullpath)
         }

@@ -79,7 +79,7 @@ class String {
     }
 
     ;; Wrapper for stringreplace
-    replace( a_from, a_to = "", a_times = "A" ){
+    replace(a_from, a_to = "", a_times = "A"){
         StringReplace, l_ret, this, % a_from, % a_to, % a_times
         return l_ret
     }

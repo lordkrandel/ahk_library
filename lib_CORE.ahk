@@ -16,6 +16,7 @@
 #include <lib_WIN32>
 #include <lib_G>
 #include <lib_G_SINGLESELECT>
+#include <lib_G_QUERYGRID>
 #include <lib_CONTROL>
 #include <lib_JSON>
 #include <lib_SQLFORMATTER>

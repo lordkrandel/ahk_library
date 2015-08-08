@@ -22,7 +22,7 @@ class QueryCommand extends ObjectBase {
     }
 
     ;; Execute
-    execute() {
+    execute(a_params*) {
         ; try to connect
         try {
             l_command := ComObjCreate("ADODB.Command")
@@ -36,7 +36,7 @@ class QueryCommand extends ObjectBase {
         try {
             l_command.CommandText := this.sql
             l_command.CommandType := 1 ;adCmdText
-            l_command.execute()
+            l_command.execute(a_params*)
         } catch l_exc {
             l_msg := "Cannot execute command `n`n%s`n`nError:`n%s"
             l_msg := l_msg.fmt(this.sql, l_exc.message) 
@@ -73,6 +73,11 @@ class Query extends ObjectBase {
         }
     }
 
+    sanitize(as){
+        as := Regexreplace(as, "i)[^\w\s\\/-_.,]", "")
+        return as
+    }
+    
     ;; Execute the current query
     do() {
         
@@ -122,7 +127,7 @@ class Query extends ObjectBase {
     _NewEnum() {
         return new QueryEnum(this.rs)
     }
-    
+
 }
 
 
@@ -132,8 +137,8 @@ class QueryEnum extends ObjectBase {
     current := 0
     ;; Constructor
     __New(a_recordset) {
-		this.recordset := a_recordset
-	}
+        this.recordset := a_recordset
+    }
     
     ;; Move to next record
     next(byref a_key, byref a_value){
@@ -141,6 +146,10 @@ class QueryEnum extends ObjectBase {
         ; Fetch next record
         this.current ++
         if (this.current == 1) {
+            if (this.recordset.EOF) {
+                this.recordset.close()
+                return false
+            }
             this.recordset.moveFirst()
         } else {
             this.recordset.movenext()
@@ -153,7 +162,7 @@ class QueryEnum extends ObjectBase {
         }
         
         ;; Return results as byref parameters
-		a_key   := this.current
+        a_key   := this.current
         a_value := new QueryRecord()
         Loop, % this.recordset.fields.count
         {
@@ -199,3 +208,5 @@ class QueryValue extends ObjectBase {
     }
 
 }
+
+

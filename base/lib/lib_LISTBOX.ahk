@@ -4,9 +4,8 @@
 class ListBox extends ObjectBase {
 
     ;; Constructor
-    __new(a_hwnd, a_parentwindow = ""){
+    __new(a_hwnd){
         this.hwnd := a_hwnd
-        this.parentwindow := a_parentwindow
     }
 
     ;; Select all entries
@@ -20,13 +19,8 @@ class ListBox extends ObjectBase {
     }
 
     ;; Select/deselect specified entries
-    select( a_active = 1, a_entry = 1 ){
-        l_id := "ahk_id " this.hwnd
-        if (a_active = 1 && a_entry > 0) {
-            Control, Choose, % a_entry,, % l_id
-        } else {
-            SendMessage, % Win32.LB_SETSEL, % a_active, % a_entry,, % l_id
-        }
+    select( a_entry = 1, a_active = 1 ){
+        SendMessage, % Win32.LB_SETSEL, % a_entry, % a_active,,  % "ahk_id " this.hwnd
     }
 
     ;; Choose an entry from the listbox
@@ -41,12 +35,12 @@ class ListBox extends ObjectBase {
             SendMessage, % Win32.LB_GETCURSEL, 0, 0, , % l_id
             l_selected := ErrorLevel
         }
-        SendMessage, % Win32.LB_SETTOPINDEX, % l_selected - 1, 0, , % l_id
+        SendMessage, % Win32.LB_SETTOPINDEX, % l_selected, 0, , % l_id
     }
 
     ;; Get current value
     getValue() {
-        GuiControlGet, l_ret, % this.parentwindow ":", % "ahk_id " this.hwnd
+        GuiControlGet, l_ret,, % "ahk_id " this.hwnd
         return l_ret
     }    
     
@@ -58,14 +52,14 @@ class ListBox extends ObjectBase {
 
     ;; Set the entries' list
     set(a_entries) {
+        l_id := "ahk_id " this.hwnd
         if (isObject(a_entries)) {
-            l_entries := "|" a_entries.join("|")
+            l_entries := a_entries.join("|")
         } else {
             l_entries := a_entries
         }
         this.entries := l_entries
-        l_parentwindow := this.parentwindow
-        guicontrol, % l_parentwindow ":", % this.hwnd, % l_entries
+        guicontrol,, % this.hwnd, % l_entries
     }
 
 }

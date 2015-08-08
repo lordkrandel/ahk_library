@@ -16,15 +16,18 @@ class Clip extends ObjectBase {
         Clipboard := a_text
         ClipWait,
         Send, ^v
-    }
+    }    
 
     ;; Paste from clipboard and ver
     ensurePaste(a_new_value){
 
         ; Send as text
         Clipboard := a_new_value
-        ClipWait, 2
+        ClipWait, 1
+
         Send, ^v
+
+        Sleep, 200
 
     }
 

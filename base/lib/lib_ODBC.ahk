@@ -4,7 +4,7 @@
 class OdbcSettings extends ObjectBase {
 
     ;; Constructor
-    __new(a_dsn, a_uid, a_pwd, a_owner=""){
+    __new(a_dsn, a_uid, a_pwd, a_owner="") {
         this.dsn   := a_dsn
         this.uid   := a_uid
         this.pwd   := a_pwd      
@@ -12,7 +12,7 @@ class OdbcSettings extends ObjectBase {
     }
 
     ;; Get all members
-    get(byref a_dsn, byref a_uid, byref a_pwd, byref a_owner=""){
+    get(byref a_dsn, byref a_uid, byref a_pwd, byref a_owner="") {
         a_dsn   := this.dsn
         a_uid   := this.uid
         a_pwd   := this.pwd
@@ -20,7 +20,7 @@ class OdbcSettings extends ObjectBase {
     }
 
     ;; Builds the connectString
-    connstring(){
+    connstring() {
         return "dsn=%s;uid=%s;pwd=%s;".fmt(this.dsn, this.uid, this.pwd)    
     }
 
@@ -29,16 +29,16 @@ class OdbcSettings extends ObjectBase {
 class SQLiteOdbcSettings extends OdbcSettings {
 
     ;; Constructor
-    __new(a_filename="db.sqlite"){
+    __new(a_filename="db.sqlite") {
         this.filename := a_filename
     }
 
-    get(byref a_dsn, byref a_uid, byref a_pwd, byref a_owner=""){
+    get(byref a_dsn, byref a_uid, byref a_pwd, byref a_owner="") {
         throw Exception("Disabled")
     }
 
     ;; Builds the connectString
-    connstring(){
+    connstring() {
         return "Driver=SQLite3 ODBC Driver;Database=%s;".fmt(this.filename)
     }
 
@@ -50,7 +50,7 @@ class SQLiteOdbcSettings extends OdbcSettings {
 class ODBC extends ObjectBase {
 
     ;; Constructor
-    __new( a_params*){
+    __new( a_params*) {
         l_count := a_params.maxIndex() 
         if (l_count == 0){
             this.settings := OdbcReg.load()
@@ -63,22 +63,22 @@ class ODBC extends ObjectBase {
     }
 
     ;; Destructor
-    __delete(){
+    __delete() {
         this.reset()
     }
 
     ;; Close the connection and reset the object
-    reset(){
+    reset() {
         this.conn.close()
         this.conn := ""
         this.connected := 0
     }
 
     ;; Start a new connection
-    connect(){
+    connect() {
     
         try {
-            if (this.connected){
+            if (this.connected) {
                 this.reset()
             }
             
@@ -105,15 +105,15 @@ class ODBC extends ObjectBase {
 ;; Utility class to retrieve or store ODBC information inside the registry 
 class OdbcReg extends ObjectBase {
 
-    static baseKey    := "HKEY_LOCAL_MACHINE"
+    static basekey    := "HKEY_LOCAL_MACHINE"
     static subKey     := "SOFTWARE\ODBC\ODBC.INI\"
     static sourcesKey := "ODBC Data Sources"
     static dsnList    := ""
 
     ;; Load settings from a specific DSN
-    loadDsn(a_dsn){
+    loadDsn(a_dsn) {
         l_dsn_key := OdbcReg.subkey 
-        try{
+        try {
             l_uid := OdbcReg.read(a_dsn, "UID")
             l_pwd := OdbcReg.read(a_dsn, "PWD")
         } catch l_exc {
@@ -131,7 +131,7 @@ class OdbcReg extends ObjectBase {
     ;; Read from the ODBC keys of the registry
     ;; read(a_valuename)
     ;; read(a_subkey, a_valuename)        
-    read( a_1, a_2="" ){
+    read( a_1, a_2="" ) {
         l_valuename := (a_2 ? a_2 : a_1)
         l_subkey    := (a_2 ? a_1 : "")
 
@@ -143,7 +143,7 @@ class OdbcReg extends ObjectBase {
     ;; Write to the ODBC keys of the registry
     ;; write(a_valuename, a_value)
     ;; write(a_subkey, a_valuename, a_value)
-    write( a_1, a_2, a_3="" ){
+    write( a_1, a_2, a_3="" ) {
         l_value     := (a_3 ? a_3 : a_2)
         l_valuename := (a_3 ? a_2 : a_1)
         l_subkey    := (a_3 ? a_1 : "")
@@ -153,7 +153,7 @@ class OdbcReg extends ObjectBase {
     }
 
     ;; Load settings from the default DSN saved in the registry
-    load(){
+    load() {
 
         ; Read from the registry
         l_defaultDsn :=  OdbcReg.read("dsn")
@@ -170,7 +170,7 @@ class OdbcReg extends ObjectBase {
     }
 
     ;; Load the list of System DSNs from the registry
-    loadDsnList(){
+    loadDsnList() {
 
         l_ret := {}
         l_baseKey := OdbcReg.baseKey 
@@ -197,7 +197,7 @@ class OdbcReg extends ObjectBase {
     }
 
     ;; Save default dsn and owner into the registry
-    saveDsn( a_settings, a_default="", a_driver="___" ){
+    saveDsn( a_settings, a_default="", a_driver="___" ) {
 
         l_source := OdbcReg.subKey OdbcReg.sourcesKey
         l_found := 0

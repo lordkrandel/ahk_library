@@ -20,20 +20,21 @@ class SelectDialog extends g {
 
     ;; Constructor
     __new(a_entries="", a_geom="") {
+
         g := this.name
         Gui, %g%: +Resize 
-        Gui, %g%: Font, s10, Verdana
+        Gui, %g%: Font, % "s" this.win.fontsize.or(11), % this.win.font.or("Verdana")
         this.geom := a_geom ? a_geom : {x: "center", y: "center", w: 600, h: 400}
 
-        Gui, %g%: Add, edit, % ""
-            . " x" 0 
+        ls := " x" 0 
             . " y" 0  
             . " w" this.geom.w 
             . " h" 20
             . " hwnd" "l_hwndedit"    
             . " g" "EventDispatcher"
-        Gui, %g%: Add, listbox, % ""
-            . " x" 0 
+        Gui, %g%: Add, edit, % ls
+
+        ls := " x" 0 
             . " y" 20 
             . " w" this.geom.w 
             . " h" this.geom.h - 20 
@@ -41,10 +42,17 @@ class SelectDialog extends g {
             . " Choose" 0  
             . " 0x100"
             . " +0x1000" ; Multi
-        this.listbox  := new Listbox(l_hwndlistbox)
+        Gui, %g%: Add, listbox, % ls
+
+
+        this.listbox  := new Listbox(l_hwndlistbox, this.name)
         this.win.edit := l_hwndedit
         this.entries  := a_entries.join("|")
         
+    }
+
+    ;; Event: selection is done
+    go() {
     }
 
     ;; Event that fires when ENTER is pressed on the dialog
@@ -54,13 +62,11 @@ class SelectDialog extends g {
         ; Get all the selected fields
         this.returnValue := this.controlGet(this.listbox.hwnd)
         Core.toggleMaxSpeed()
-        this.done()
+
+        this.go()
         this.close()
     }
 
-    ;; Event: selection is done
-    done() {
-    }
 
     ;; Event: window is resized
     size() {
@@ -73,41 +79,51 @@ class SelectDialog extends g {
     ;; Filter entries based on the edit value
     filter() {
         
+        l_oldentries := this.entries
+        if (isObject(l_oldentries)) {
+            l_oldentries := l_oldentries.join("|")
+        }
+
         ; Maximum speed, no pause
         Core.toggleMaxSpeed() 
         
         ; Filter based on editvalue
         editValue := this.controlGet( this.win.edit )
-        if (editValue){
-            top := []
-            bottom := []
-            for k, v in this.entries.split("|") {
-                if ( instr(v, editValue) > 0 ){
-                    if ( s == 1 ){
-                        top.insert(v)
-                    } else {
-                        bottom.insert(v)
-                    }
+        if (editValue != ""){
+            top := [], mid := [], bottom := []
+            for k, v in l_oldentries.split("|") {
+                s := instr(v, editValue)
+                if ( s == 1 ) {
+                    top.insert(v)
+                } else if ( substr(v, s-1, 1) == "\" ) {
+                    mid.insert(v)
+                } else if (s > 0) {
+                    bottom.insert(v)
                 }
             }
-            entries .= top.join("|") bottom.join("|")
+            for _, l_list in [top, mid, bottom] {
+                if (entries != "" && l_list.maxindex()){
+                    entries .= "|"
+                }
+                entries .= l_list.join("|")
+            }
         } else {
-            entries .= this.entries
+            entries .= l_oldentries
         }
-        
-        ; Clear old entries        
+
+        ; Clear old entries
         entries := "|" entries
         if (entries != "|"){
-            ;Preselect the first entry
+            ; Preselect the first entry
             entries := regexreplace(entries, "^\|([^\|]*+)\|*", "|$1||")
         }
         
         ; Set the entries on the listbox
         this.listbox.set(entries)
-        
+
         ; Back to normal speed
         Core.toggleMaxSpeed() 
-        
+
    }
 
     ;; Event: arrow key is pressed

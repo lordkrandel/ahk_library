@@ -33,7 +33,7 @@ class autoComplete extends g {  ; ________________________
         Gui, %l_name%: Add, edit,    x0 y0  w300 h20 hwndhwndedit    gEventDispatcher
         Gui, %l_name%: Add, listbox, x0 y20          hwndhwndlistbox Choose0 0x100 Multi +0x1000
         this.hwnd     := winhwnd
-        this.listbox  := new Listbox(hwndlistbox)
+        this.listbox  := new Listbox(hwndlistbox, this.name)
         this.win.edit := hwndedit
     }
 
@@ -54,9 +54,10 @@ class autoComplete extends g {  ; ________________________
             return
         }
         this.entries := entries
-        this.controlSet(this.listbox.hwnd, "", Entries)
+        this.controlSet(this.listbox.hwnd, "", entries)
 
         val := this.controller.getCurrentLevel().value
+
         this.controlSet(this.win.edit, "", "")
         Gui, % this.name ": Show",, % this.controller.getTitle()
         this.listbox.deselectAll()
@@ -112,7 +113,6 @@ class autoComplete extends g {  ; ________________________
 
     enterSlot(){
         global ac 
-        this.hide()
 
         ; Fastest
         batchlines := A_Batchlines
@@ -122,10 +122,8 @@ class autoComplete extends g {  ; ________________________
         s := this.controlGet( this.listbox.hwnd )
         s := this.controller.build(s)
         
-        l_id := ac.controller.lastHwnd
-        WinActivate, % "ahk_id " l_id
-        WinWaitActive, % "ahk_id " l_id, , 2
-        
+        this.hide()
+
         ; Paste text to the control
         Clip.ensurePaste(s)
 
@@ -142,7 +140,7 @@ class autoComplete extends g {  ; ________________________
 
     filter() {
         t := this.controlGet( this.win.edit )
-        entries := this.Entries
+        entries := this.entries
         if (t != ""){
             arr     := entries.split("|", "")
             entries := ""
@@ -162,7 +160,7 @@ class autoComplete extends g {  ; ________________________
         entries := top entries
         entries := entries.or("|")
 
-        this.listbox.set( entries )
+        this.listbox.set(entries)
         this.listbox.choose(0)
     }
 }

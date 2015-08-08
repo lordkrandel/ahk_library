@@ -19,7 +19,7 @@ class g extends Window {
 
     ;; Set default content of a control
     controlSet( a_control, a_subcmd = "", a_param3 = "" ) {
-        GuiControl, % this.name ":" a_subcmd, % a_control , % a_param3
+        GuiControl, % this.name ": " a_subcmd, % a_control , % a_param3
     }
 
     ;; Get default content of a control
@@ -37,7 +37,7 @@ class g extends Window {
 
     ;; Show and register all window events
     show(a_geom="") {
-        this.geom := a_geom.or({x: "center", y: "center", w: 600, h: 400})
+        this.geom := a_geom ? a_geom : {x: "center", y: "center", w: 600, h: 400}
         Gui, % this.name ": +LabelGui +Resize +hwndl_winHwnd"
         Gui, % this.name ": Show", % ""
             . " x" this.geom.x

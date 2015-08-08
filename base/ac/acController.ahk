@@ -93,11 +93,11 @@ class acController {
         lvl   := this.getCurrentLevel()
 
         ; Build the prefix
-        sub := "`n"
-
-        ; Add comma if required by "," "+,"
         if ( htk.in([",", "+,"])) {
-            sub := "," sub
+            ; Add comma if required by "," "+,"
+            sub := "`n, " sub
+        } else {
+            sub := "`n"
         }
 
         ; Add prefix if required by Shift

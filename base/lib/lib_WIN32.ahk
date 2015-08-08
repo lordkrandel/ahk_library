@@ -7,7 +7,6 @@ Class Win32 extends ObjectBase {
     put(a_value, a_type="", a_address=0, a_offset=0){
 
         ; saving last address is useful for chaining
-        static l_address := 0
         if ( a_address ){
             l_address := a_address
         } 

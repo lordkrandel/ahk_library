@@ -82,7 +82,10 @@ class EventDispatcher{
              }
 
         } catch l_exc {
-            throw new Exception("Event handling failed" l_exc.message)
+            throw Exception("Event handling failed, "
+                . "message: " l_exc.message 
+                . ", line: " l_exc.line 
+                . ", what: " l_exc.whata)
         }
         return
     }

@@ -1,5 +1,3 @@
-#include <lib_CORE>
-
 ;; Base class for AutoHotkey GUI windows
 class g extends Window {
 
@@ -25,7 +23,7 @@ class g extends Window {
     ;; Get default content of a control
     controlGet( a_control, a_subcmd = "", a_param4 = "" ) {
         GuiControlGet, l_ret, % this.name ":" a_subcmd, % a_control, % a_param4
-        return % l_ret
+        return l_ret
     }
 
     ;; Close and unregister all window events

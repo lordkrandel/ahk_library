@@ -1,4 +1,3 @@
-#include <LIB_CORE>
 
 ;; Single entry selection dialog
 class SelectDialog extends g {
@@ -61,11 +60,15 @@ class SelectDialog extends g {
         ; Get all the selected fields
         this.returnValue := this.controlGet(this.listbox.hwnd)
 
-        this.close() ; Close before doing anything
         Core.toggleMaxSpeed()
         Sleep, 200
 
+        this.hide() ; Hide before doing anything
+
         this.go()
+
+        this.close() 
+
     }
 
 

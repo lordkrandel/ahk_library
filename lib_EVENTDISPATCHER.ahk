@@ -85,7 +85,7 @@ class EventDispatcher{
             throw Exception("Event handling failed, "
                 . "message: " l_exc.message 
                 . ", line: " l_exc.line 
-                . ", what: " l_exc.whata)
+                . ", what: " l_exc.what)
         }
         return
     }

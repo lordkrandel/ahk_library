@@ -211,21 +211,36 @@ class ObjectBase {
         }
     }
 
-    ;; 20141230 Return value with minimum index
+    ;; Return value with minimum index
     first() {
         return this[this.minIndex()]
     }
 
-    ;; 20141230 Return value with maximum index
+    ;; Return value with maximum index
     last() {
         return this[this.maxIndex()]
     }
 
-	;; 20141230 Length of the object
-	count(){
-		return this.maxIndex().or(0)
-	}
+    ;; Length of the object
+    count(){
+        return this.maxIndex().or(0)
+    }
 
+    ;; Flatten object
+    flatten() {
+        l_obj := []
+        for k, v in this {
+            if (isobject(v)){
+                for k2, v2 in v {
+                    l_obj.insert(v2.flatten().or(v2))
+                }
+            } else {
+                l_obj.insert(v)
+            }
+        }
+        return l_obj
+    }
+    
 }
 
 ;; Override the Array() constructor for all arrays, even when called implicitly

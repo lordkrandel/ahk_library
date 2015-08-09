@@ -4,7 +4,8 @@
 class ListBox extends ObjectBase {
 
     ;; Constructor
-    __new(a_hwnd){
+    __new(a_name, a_hwnd){
+        this.name := a_name
         this.hwnd := a_hwnd
     }
 
@@ -42,8 +43,8 @@ class ListBox extends ObjectBase {
     getValue() {
         GuiControlGet, l_ret,, % "ahk_id " this.hwnd
         return l_ret
-    }    
-    
+    }
+
     ;; Get the entries' list
     get() {
         ControlGet, l_ret, List,,, % "ahk_id " this.hwnd
@@ -52,14 +53,13 @@ class ListBox extends ObjectBase {
 
     ;; Set the entries' list
     set(a_entries) {
-        l_id := "ahk_id " this.hwnd
-        if (isObject(a_entries)) {
-            l_entries := a_entries.join("|")
+        if (a_entries.maxindex()) {
+            l_entries := "|" a_entries.join("|")
         } else {
             l_entries := a_entries
         }
         this.entries := l_entries
-        guicontrol,, % this.hwnd, % l_entries
+        GuiControl, % this.name ":", % this.hwnd, % l_entries
     }
 
 }

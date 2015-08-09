@@ -43,10 +43,10 @@ class SelectDialog extends g {
             . " +0x1000" ; Multi
         Gui, %g%: Add, listbox, % ls
 
-        this.listbox  := new Listbox(l_hwndlistbox)
+        this.listbox  := new Listbox(this.name, l_hwndlistbox)
         this.win.edit := l_hwndedit
-        this.entries  := a_entries.join("|")
-        
+        this.entries  := a_entries
+
     }
 
     ;; Event: selection is done
@@ -85,33 +85,39 @@ class SelectDialog extends g {
         
         ; Maximum speed, no pause
         Core.toggleMaxSpeed() 
-        
+
+        ; Retrieve entries
+        entries := this.entries
+        if (entries.maxindex()) {
+            entries := entries.join("|")
+        }
+
         ; Filter based on editvalue
         editValue := this.controlGet( this.win.edit )
         if (editValue){
-            top := []
-            bottom := []
-            for k, v in this.entries.split("|") {
+
+            box := [[],[],[]]
+            for k, v in entries.split("|") {
                 if ( instr(v, editValue) > 0 ){
                     if ( s == 1 ){
-                        top.insert(v)
+                        box[1].insert(v)
+                    } else if (instr(v, "\" editvalue)) {
+                        box[2].insert(v)
                     } else {
-                        bottom.insert(v)
+                        box[3].insert(v)
                     }
                 }
             }
-            entries .= top.join("|") bottom.join("|")
-        } else {
-            entries .= this.entries
+            entries := box.flatten().join("|")
         }
-        
-        ; Clear old entries        
+
+        ; Clear old entries 
         entries := "|" entries
         if (entries != "|"){
             ;Preselect the first entry
             entries := regexreplace(entries, "^\|([^\|]*+)\|*", "|$1||")
         }
-        
+
         ; Set the entries on the listbox
         this.listbox.set(entries)
         

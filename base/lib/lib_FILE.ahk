@@ -159,12 +159,13 @@ class File extends ObjectBase {
 
 }
 
+
 ;; handles standard input as a file object
 class StdIn extends File {
 
     ;; Constructor
     __New(){
-        this._fileobject := FileOpen(DllCall("GetStdHandle", "int", -10, "ptr"), "h `n")
+        this._file := FileOpen("*", "r")
     }
 
 }
@@ -174,7 +175,17 @@ class StdOut extends File {
 
     ;; Constructor
     __new(){
-        this._fileobject := FileOpen(DllCall("GetStdHandle", "int", -11, "ptr"), "h `n")
+        this._file := FileOpen("*", "w")
+    }
+
+}
+
+;; handles standard error as a file object
+class StdErr extends File {
+
+    ;; Constructor
+    __new(){
+        this._file := FileOpen("**", "w")
     }
 
 }
